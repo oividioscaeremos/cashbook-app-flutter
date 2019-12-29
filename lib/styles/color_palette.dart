@@ -1,15 +1,31 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 class ColorPalette {
   // https://colorswall.com/palette/9969/
-  Color _dollarGreen = Color(0x007bc144);
-  Color _errorRed = Color(0x00f45c3c);
-  Color _darkBlue = Color(0x00071a36);
-  Color _turquoise = Color(0x009cacc4);
-  Color _pink = Color(0x009e5b5e);
-  Color _darkerPink = Color(0x00442c3c);
-  Color _lighterPink = Color(0x00eda092);
-  Color _orange = Color(0x00f45c3c);
+  Color _dollarGreen = Color(0xff7bc144);
+  Color _errorRed = Color(0xfff45c3c);
+  Color _darkBlue = Color(0xff071a36);
+  Color _turquoise = Color(0xff9cacc4);
+  Color _pink = Color(0xff9e5b5e);
+  Color _darkerPink = Color(0xff442c3c);
+  Color _lighterPink = Color(0xffeda092);
+  Color _orange = Color(0xfff45c3c);
+  Color _white = Colors.white;
+  Color _white54 = Colors.white54;
+
+  Color get white54 => _white54;
+
+  Color _logoLightBlue = Color(0xffa5b4ff);
+
+  Color _spotifyBlack = Color(0xff1e1e1e);
+
+  Color get spotifyBlack => _spotifyBlack;
+
+  Color get logoLightBlue => _logoLightBlue;
+
+  Color get white => _white;
 
   Color get dollarGreen => _dollarGreen;
 
