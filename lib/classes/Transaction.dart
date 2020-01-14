@@ -6,7 +6,6 @@ class TransactionApp {
   DateTime date;
   bool method; // true if cash; false if check;
   double amount;
-  String currency;
   String type;
   bool processed;
 
@@ -17,6 +16,5 @@ class TransactionApp {
       this.method,
       this.amount,
       this.type,
-      this.currency,
       this.processed});
 }

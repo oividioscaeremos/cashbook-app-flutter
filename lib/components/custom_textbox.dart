@@ -8,6 +8,7 @@ class CustomTextBox extends StatelessWidget {
   final Function function;
   final Color borderColor;
   final Function validator;
+  final int maxLines;
 
   CustomTextBox(
       {this.size,
@@ -15,7 +16,8 @@ class CustomTextBox extends StatelessWidget {
       this.borderColor,
       this.function,
       this.keyboardType,
-      this.validator});
+      this.validator,
+      this.maxLines});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class CustomTextBox extends StatelessWidget {
       onChanged: (input) {
         function(input);
       },
+      maxLines: maxLines,
       obscureText:
           this.hintText == "Password" || this.hintText == "Confirm Password"
               ? true
@@ -45,6 +48,7 @@ class CustomTextBox extends StatelessWidget {
         ),
       ),
       validator: (input) {
+        print('validator:' + input);
         return validator(input);
       },
     );

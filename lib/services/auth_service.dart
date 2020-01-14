@@ -40,9 +40,9 @@ class AuthService {
             "currentCashBalance": 0.0,
             "currentTotalBalance": 0.0,
           },
-          "partners": {},
-          "revenues": {},
-          "payments": {}
+          "partners": [],
+          "revenues": [],
+          "payments": []
         });
       });
 
@@ -75,6 +75,12 @@ class AuthService {
   // Get Current User
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
+    Firestore fs = Firestore.instance;
+
+    DocumentReference docRef = fs.collection('users').document(user.uid);
+    print('docRef');
+    print(docRef.documentID);
+
     return user;
   }
 }

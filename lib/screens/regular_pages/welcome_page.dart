@@ -52,9 +52,8 @@ class _WelcomePageState extends State<WelcomePage> {
     return FutureBuilder<FirebaseUser>(
         future: authService.getCurrentUser(),
         builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-          print("snapshot data");
-          print(snapshot.hasData);
           if (snapshot.hasData) {
+            print('this is the userdata!!!');
             print(snapshot.data.uid);
             return MaterialApp(
               theme: ThemeData(
@@ -95,6 +94,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           borderColor: colorPalette.logoLightBlue,
                           function: onChangeFunction,
                           keyboardType: TextInputType.emailAddress,
+                          maxLines: 1,
                         ),
                       ),
                       Padding(
@@ -106,6 +106,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           borderColor: colorPalette.logoLightBlue,
                           function: onChangeFunctionTwo,
                           keyboardType: TextInputType.text,
+                          maxLines: 1,
                         ),
                       ),
                       Row(

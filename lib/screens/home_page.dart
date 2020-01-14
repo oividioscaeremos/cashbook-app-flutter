@@ -90,7 +90,15 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         backgroundColor: colorPalette.darkBlue,
-        body: _pageOptions[_selectedIndex],
+        body: SafeArea(
+          top: false,
+          child: IndexedStack(
+            index: _selectedIndex,
+            children: allDestinations.map<Widget>((Destination destination) {
+              return DestinationView(destination: destination);
+            }).toList(),
+          ),
+        ),
       ),
     );
   }

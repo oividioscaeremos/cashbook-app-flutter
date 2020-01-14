@@ -4,11 +4,10 @@ class ReusableCard extends StatelessWidget {
   final Color color;
   final Function onTap;
   final Widget cardChild;
-
-  static const double edgeInsets = 15.0;
+  final double edgeInsets;
   static const double borderRadius = 10.0;
 
-  ReusableCard({this.color, this.onTap, this.cardChild});
+  ReusableCard({this.color, this.onTap, this.cardChild, this.edgeInsets});
 
   @override
   Widget build(BuildContext context) {

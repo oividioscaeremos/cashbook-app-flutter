@@ -136,6 +136,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           function: onChangedCN,
                           keyboardType: TextInputType.text,
                           validator: isEmpty,
+                          maxLines: 1,
                         ),
                       ),
                       Padding(
@@ -151,6 +152,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           function: onChangedEM,
                           keyboardType: TextInputType.emailAddress,
                           validator: validatorEmail,
+                          maxLines: 1,
                         ),
                       ),
                       Padding(
@@ -166,6 +168,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           function: onChangedNS,
                           keyboardType: TextInputType.text,
                           validator: isEmpty,
+                          maxLines: 1,
                         ),
                       ),
                       Padding(
@@ -181,6 +184,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           function: onChangedPW,
                           keyboardType: TextInputType.text,
                           validator: validatorPassword,
+                          maxLines: 1,
                         ),
                       ),
                       Padding(
@@ -196,6 +200,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           function: onChangedCPW,
                           keyboardType: TextInputType.text,
                           validator: validatorCPassword,
+                          maxLines: 1,
                         ),
                       ),
                       Padding(

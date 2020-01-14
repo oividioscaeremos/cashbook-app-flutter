@@ -1,3 +1,4 @@
+import 'package:cash_book_app/components/custom_appBar.dart';
 import 'package:cash_book_app/components/reusable_card.dart';
 import 'package:cash_book_app/screens/home_page.dart';
 import 'package:cash_book_app/screens/regular_pages/welcome_page.dart';
@@ -25,87 +26,88 @@ class _HomeCompleteState extends State<HomeComplete> {
 
   @override
   void initState() {
-    print("before");
-    print(_currentCashBalance);
     super.initState();
     //refreshPage();
-
-    refreshPage();
-    print("after");
-    print(_currentCashBalance);
-  }
-
-  void refreshPage() {
-    _firebaseCrud.getCurrentCashBalance(userId).then((data) {
-      print("data");
-      print(data);
-      setState(() {
-        _currentCashBalance = data;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: colorPalette.darkBlue,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Text(
-          "Home",
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: colorPalette.white,
+    return StreamBuilder(
+      stream: _firebaseCrud.getCurrentCashBalance(userid),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+            appBar: PreferredSize(
+              child: CustomAppBar("Home", Icons.refresh, () {}),
+              preferredSize: new Size(
+                MediaQuery.of(context).size.width,
+                60.0,
+              ),
             ),
-            onPressed: () {
-              refreshPage();
-            },
-          )
-        ],
-      ),
-      backgroundColor: Colors.white,
-      body: Container(
-        color: colorPalette.darkGrey,
-        child: Column(
-          children: <Widget>[
-            ReusableCard(
-              color: colorPalette.darkerPink,
-              onTap: () {},
-              cardChild: Column(
+            backgroundColor: Colors.white,
+            body: Container(
+              color: colorPalette.darkGrey,
+              child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Text(
-                      "Mevcut Nakit Bakiyeniz:",
-                      style: h_c_CurrentBalanceTextStyle,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Center(
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              _currentCashBalance.toString() + " ₺",
-                              style: h_c_CurrentBalanceBalanceTextStyle,
-                            ),
-                          ],
+                  ReusableCard(
+                    color: colorPalette.darkerPink,
+                    edgeInsets: 10.0,
+                    onTap: () {},
+                    cardChild: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Text(
+                            "Current Cash Balance:",
+                            style: h_c_CurrentBalanceTextStyle,
+                          ),
                         ),
-                      )
-                    ],
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    snapshot.data['properties']
+                                                ['currentCashBalance']
+                                            .toString() +
+                                        " ₺",
+                                    style: h_c_CurrentBalanceBalanceTextStyle,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
-            )
-          ],
-        ),
-      ),
+            ),
+          );
+        } else {
+          return Scaffold(
+            appBar: PreferredSize(
+              child: CustomAppBar("Home", Icons.add_circle, () {}),
+              preferredSize: new Size(
+                MediaQuery.of(context).size.width,
+                60.0,
+              ),
+            ),
+            backgroundColor: colorPalette.darkGrey,
+            body: Container(
+              child: Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 5.0,
+                ),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }
