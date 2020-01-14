@@ -10,10 +10,18 @@ class ColorPalette {
   Color _turquoise = Color(0xff9cacc4);
   Color _pink = Color(0xff9e5b5e);
   Color _darkerPink = Color(0xff442c3c);
+  Color _middlePink = Color(0xffe83d66);
   Color _lighterPink = Color(0xffeda092);
   Color _orange = Color(0xfff45c3c);
   Color _white = Colors.white;
   Color _white54 = Colors.white54;
+  Color _lighterDarkBlue = Color(0xff071a66);
+  Color _darkGrey = Color(0xff2c292c);
+
+  Color get darkGrey => _darkGrey;
+
+  Color get middlePink => _middlePink;
+  Color get lighterDarkBlue => _lighterDarkBlue;
 
   Color get white54 => _white54;
 

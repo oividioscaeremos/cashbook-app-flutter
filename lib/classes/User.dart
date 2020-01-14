@@ -8,8 +8,8 @@ class User {
   String eMail;
   int currentCashBalance;
   int currentTotalBalance;
-  List<Transaction> payments;
-  List<Transaction> revenues;
+  List<TransactionApp> payments;
+  List<TransactionApp> revenues;
   List<Company> partners;
 
   User(

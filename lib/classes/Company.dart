@@ -6,8 +6,8 @@ class Company {
   String address;
   Person personOne;
   Person personTwo;
-  List<Transaction> payments;
-  List<Transaction> revenues;
+  List<TransactionApp> payments;
+  List<TransactionApp> revenues;
 
   Company({companyName, address, personOne, personTwo}) {
     this.companyName = companyName;

@@ -1,3 +1,4 @@
+import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextBox extends StatelessWidget {
@@ -6,25 +7,33 @@ class CustomTextBox extends StatelessWidget {
   final String hintText;
   final Function function;
   final Color borderColor;
+  final Function validator;
 
   CustomTextBox(
       {this.size,
       this.hintText,
       this.borderColor,
       this.function,
-      this.keyboardType});
+      this.keyboardType,
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      onChanged: function(),
-      obscureText: this.hintText == "Password" ? true : false,
+    return TextFormField(
+      onChanged: (input) {
+        function(input);
+      },
+      obscureText:
+          this.hintText == "Password" || this.hintText == "Confirm Password"
+              ? true
+              : false,
       keyboardType: this.keyboardType,
       decoration: InputDecoration(
-        hintText: this.hintText,
-        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        labelText: this.hintText,
+        contentPadding: EdgeInsets.symmetric(
+            vertical: contentPaddingTB, horizontal: contentPaddingTB),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+          borderRadius: BorderRadius.all(Radius.circular(this.size)),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: this.borderColor, width: 1.0),
@@ -35,6 +44,9 @@ class CustomTextBox extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(this.size)),
         ),
       ),
+      validator: (input) {
+        return validator(input);
+      },
     );
   }
 }

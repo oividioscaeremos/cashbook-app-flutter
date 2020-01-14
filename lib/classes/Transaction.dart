@@ -1,6 +1,6 @@
 import 'Company.dart';
 
-class Transaction {
+class TransactionApp {
   Company from;
   Company to;
   DateTime date;
@@ -10,7 +10,7 @@ class Transaction {
   String type;
   bool processed;
 
-  Transaction(
+  TransactionApp(
       {this.from,
       this.to,
       this.date,

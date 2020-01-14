@@ -1,21 +1,38 @@
+import 'package:cash_book_app/classes/Destination.dart';
+import 'package:cash_book_app/complete_pages/partners_complete.dart';
+import 'package:cash_book_app/complete_pages/profile_complete.dart';
+import 'package:cash_book_app/components/destination_view.dart';
+import 'package:cash_book_app/screens/regular_pages/welcome_page.dart';
+import 'package:cash_book_app/services/auth_service.dart';
+import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
-import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../complete_pages/home_complete.dart';
+
+String userId;
 
 class HomePage extends StatefulWidget {
   static String id = "home_page";
-  static String userId;
+
+  HomePage(String uid) {
+    print("homepage" + uid);
+    userId = uid;
+  }
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  ColorPalette colorPalette = new ColorPalette();
+  AuthService authService = new AuthService();
   int _selectedIndex = 0;
+  String _title = "Home";
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         systemNavigationBarColor: colorPalette.darkBlue,
@@ -24,26 +41,43 @@ class _HomePageState extends State<HomePage> {
         statusBarIconBrightness: Brightness.light,
       ),
     );
+  }
 
-    _onTapFunc(int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
+  List<Destination> allDestinations = [
+    new Destination('Home', Icons.home, Colors.white10, HomeComplete(userId)),
+    new Destination(
+        'Partners', Icons.business, Colors.white10, PartnersComplete(userId)),
+    new Destination('Profile', Icons.account_balance, Colors.white10,
+        ProfileComplete(userId))
+  ];
 
+  final _pageOptions = [
+    new HomeComplete(userId),
+    new PartnersComplete(userId),
+    new ProfileComplete(userId),
+  ];
+
+  ColorPalette colorPalette = new ColorPalette();
+
+  _onTapFunc(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: colorPalette.pink,
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: Text(
-            "mahmut",
-          ),
-        ),
         bottomNavigationBar: BottomNavigationBar(
           onTap: _onTapFunc,
-          items: hBottomNavBarItems,
+          items: allDestinations.map((Destination destination) {
+            return BottomNavigationBarItem(
+              icon: Icon(destination.icon),
+              backgroundColor: destination.color,
+              title: Text(destination.title),
+            );
+          }).toList(),
           currentIndex: _selectedIndex,
           backgroundColor: colorPalette.spotifyBlack,
           unselectedItemColor: colorPalette.white54,
@@ -56,14 +90,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         backgroundColor: colorPalette.darkBlue,
-        body: Container(
-          child: Text(
-            "Merhaba",
-            style: TextStyle(
-              color: colorPalette.white,
-            ),
-          ),
-        ),
+        body: _pageOptions[_selectedIndex],
       ),
     );
   }
