@@ -17,7 +17,6 @@ class _CashBookAppState extends State<CashBookApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

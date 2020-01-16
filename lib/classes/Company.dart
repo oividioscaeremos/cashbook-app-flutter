@@ -9,8 +9,8 @@ class Company {
   Person personTwo;
   List<TransactionApp> payments;
   List<TransactionApp> revenues;
-  int paymentBalance;
-  int revenueBalance;
+  double paymentBalance;
+  double revenueBalance;
 
   Company(
       {uid,

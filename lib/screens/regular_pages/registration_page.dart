@@ -4,6 +4,7 @@ import 'package:cash_book_app/styles/color_palette.dart';
 import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RegistrationPage extends StatefulWidget {
   static String id = 'registration_page';
@@ -242,9 +243,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
       var returned = authService.createUser(
           _eMail, _password, _companyName, _nameAndSurname);
 
-      /*if(returned == "ERROR_EMAIL_ALREADY_IN_USE"){
-        formState.
-      }*/
+      returned.then((rtVal) {
+        if (rtVal == "ERROR_EMAIL_ALREADY_IN_USE") {
+          Alert(
+            context: context,
+            type: AlertType.warning,
+            title: "ERROR",
+            desc: "This email is in use.",
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "OKAY",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                gradient: LinearGradient(colors: [
+                  Color.fromRGBO(116, 116, 191, 1.0),
+                  Color.fromRGBO(52, 138, 199, 1.0)
+                ]),
+              )
+            ],
+          ).show();
+        } else {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+      });
     }
   }
 }

@@ -33,7 +33,6 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(

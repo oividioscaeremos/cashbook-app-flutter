@@ -24,7 +24,6 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         systemNavigationBarColor: colorPalette.white,

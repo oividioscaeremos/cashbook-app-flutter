@@ -8,6 +8,7 @@ import 'package:cash_book_app/screens/home_page.dart';
 import 'package:cash_book_app/services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:firebase_auth/firebase_auth.dart";
+import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseCrud {
   final Firestore _firestore = Firestore.instance;
@@ -19,6 +20,12 @@ class FirebaseCrud {
 
   Stream<DocumentSnapshot> getCurrentTotalBalance(String uid) {
     return _firestore.collection('users').document(uid).snapshots();
+  }
+
+  Future<String> getCurrentUserId() {
+    _authService.getCurrentUser().then((user) {
+      return user.uid;
+    });
   }
 
   Future<String> createCompany(Company company) async {
@@ -57,7 +64,6 @@ class FirebaseCrud {
             _firestore.collection('users').document(currentUser.uid);
 
         List partners = userSnapshot.data['partners'];
-        print(partners.toString());
         if (!partners.contains(docID)) {
           userRef.updateData({
             'partners': FieldValue.arrayUnion([docID])
@@ -69,48 +75,21 @@ class FirebaseCrud {
     });
   }
 
-  Future<List<Company>> getCompanies() async {
-    FirebaseUser curruser = await _authService.getCurrentUser();
-
-    DocumentSnapshot userSnapshot = await Firestore.instance
-        .collection('users')
-        .document(curruser.uid)
-        .get();
-
-    List partners = userSnapshot.data['partners'];
-
-    QuerySnapshot usersComp = await _firestore
+  Stream<QuerySnapshot> getCompanies(String id) {
+    return _firestore
         .collection('companies')
-        .where('belongsTo', isEqualTo: curruser.uid)
-        //.orderBy('properties.companyName', descending: false)
-        .getDocuments();
+        .where('belongsTo', isEqualTo: id)
+        //.orderBy(('properties.companyName'), descending: false)
+        .getDocuments()
+        .asStream();
+  }
 
-    List<Company> companies = new List<Company>();
-
-    usersComp.documents.forEach((f) {
-      int indexOfthis = usersComp.documents.indexOf(f);
-
-      companies.add(new Company(
-        uid: partners[indexOfthis],
-        companyName: f.data['properties']['companyName'],
-        address: f.data['properties']['address'],
-        paymentBalance: f.data['currentPaymentBalance'],
-        revenueBalance: f.data['currentRevenueBalance'],
-        personOne: new Person(
-            phoneNumber: f.data['properties']['personOne']['phoneNumber'],
-            nameAndSurname: f.data['properties']['personOne']
-                ['nameAndSurname']),
-        personTwo: new Person(
-            phoneNumber: f.data['properties']['personTwo']['phoneNumber'],
-            nameAndSurname: f.data['properties']['personTwo']
-                ['nameAndSurname']),
-      ));
-
-      print('companies[companies.length - 1].companyName');
-      print(f.data['properties']['personTwo'].toString());
+  String getSingleCompanyNameFromID(String id) {
+    _firestore.collection('companies').document(id).get().then((snapShot) {
+      print('snapShot.data["properties"]["companyName"]');
+      print(snapShot.data["properties"]["companyName"]);
+      return snapShot.data["properties"]["companyName"];
     });
-
-    return companies;
   }
 
   /*Future<List<Transaction>> getTransaction(
@@ -122,36 +101,283 @@ class FirebaseCrud {
     } else {}
   }*/
 
-  Future<String> addTransaction(
+  Future<void> addTransaction(
       TransactionApp ourTransaction, bool isRevenue) async {
     FirebaseUser curruser = await _authService.getCurrentUser();
 
     if (isRevenue) {
-      var user = _firestore
-          .collection('users')
-          .document(curruser.uid);
-      
+      var user = _firestore.collection('users').document(curruser.uid);
+
       _firestore.collection('revenues').add({
-        'from': curruser.uid,
-        'to': ourTransaction.to.uid,
+        'from': ourTransaction.from,
+        'to': ourTransaction.to,
         'date': ourTransaction.date,
-        'type': ourTransaction.type,
         'amount': ourTransaction.amount,
-        'isProcessed': ourTransaction.processed
-      }).then((docReferenceOfTheTransaction) {
+        'isProcessed': ourTransaction.processed,
+        'details': ourTransaction.detail
+      }).then((docReferenceOfTheTransaction) async {
+        docReferenceOfTheTransaction
+            .updateData({"tID": docReferenceOfTheTransaction.documentID});
+
+        DocumentSnapshot docSS =
+            await _firestore.collection('users').document(curruser.uid).get();
+        DocumentReference dbRefUser =
+            _firestore.collection('users').document(curruser.uid);
+
         if (ourTransaction.processed) {
-          _firestore
-              .collection('users')
-              .document(curruser.uid)
-          .setData({'currentCashBalance': user.get().then(onValue)})
-              .updateData({'currentCashBalance': cu})
-              .then((userSnapshot) {
-            double currentCashBalance = userSnapshot.data['properties']
-                    ['currentCashbalance']
-                .toDouble();
-            currentCashBalance += ourTransaction.amount;
-            userSnapshot.data.update('currentCashBalance', currentCashBalance})
+          double currentCashBalance = double.parse(
+              docSS['properties']['currentCashBalance'].toString());
+
+          print("currentCashBalance");
+          print(currentCashBalance);
+
+          dbRefUser.updateData({
+            "properties.currentCashBalance":
+                currentCashBalance + ourTransaction.amount
           });
+        } else {
+          DocumentSnapshot docSSPartner = await _firestore
+              .collection("companies")
+              .document(ourTransaction.from)
+              .get();
+          DocumentReference dbRefPartner = await _firestore
+              .collection("companies")
+              .document(ourTransaction.from);
+
+          double partnerRevenueBalance =
+              double.parse(docSSPartner['currentRevenueBalance'].toString());
+
+          dbRefPartner.updateData({
+            "currentRevenueBalance":
+                partnerRevenueBalance + ourTransaction.amount
+          });
+
+          double currentTotalBalance = double.parse(
+              docSS['properties']['currentTotalBalance'].toString());
+
+          dbRefUser.updateData({
+            "properties.currentTotalBalance":
+                currentTotalBalance + ourTransaction.amount
+          });
+        }
+      });
+    } else {
+      var user = _firestore.collection('users').document(curruser.uid);
+
+      _firestore.collection('payments').add({
+        'tID': "",
+        'from': ourTransaction.from,
+        'to': ourTransaction.to,
+        'date': ourTransaction.date,
+        'amount': ourTransaction.amount.toDouble(),
+        'isProcessed': ourTransaction.processed,
+        'details': ourTransaction.detail
+      }).then((docReferenceOfTheTransaction) async {
+        DocumentSnapshot docSS =
+            await _firestore.collection('users').document(curruser.uid).get();
+        DocumentReference dbRefUser =
+            _firestore.collection('users').document(curruser.uid);
+
+        docReferenceOfTheTransaction
+            .updateData({"tID": docReferenceOfTheTransaction.documentID});
+
+        if (ourTransaction.processed) {
+          double currentCashBalance = double.parse(
+              docSS['properties']['currentCashBalance'].toString());
+
+          dbRefUser.updateData({
+            "properties.currentCashBalance":
+                FieldValue.increment(-ourTransaction.amount)
+          });
+        } else {
+          DocumentSnapshot docSSPartner = await _firestore
+              .collection("companies")
+              .document(ourTransaction.to)
+              .get();
+          DocumentReference dbRefPartner = await _firestore
+              .collection("companies")
+              .document(ourTransaction.to);
+
+          dbRefUser.updateData({
+            "properties.currentTotalBalance":
+                FieldValue.increment(-ourTransaction.amount.toDouble())
+          });
+
+          double partnerPaymentBalance =
+              double.parse(docSSPartner['currentPaymentBalance'].toString());
+
+          dbRefPartner.updateData({
+            "currentPaymentBalance":
+                FieldValue.increment(ourTransaction.amount.toDouble())
+          });
+        }
+      });
+    }
+  }
+
+  Stream<QuerySnapshot> getTransactions(
+      String userID, String partnerID, bool isRevenue) {
+    if (isRevenue) {
+      return _firestore
+          .collection('revenues')
+          .where('from', isEqualTo: partnerID)
+          .where('to', isEqualTo: userID)
+          //.orderBy('properties.companyName', descending: false)
+          .getDocuments()
+          .asStream();
+    } else {
+      return _firestore
+          .collection('payments')
+          .where('from', isEqualTo: userID)
+          .where('to', isEqualTo: partnerID)
+          //.orderBy('properties.companyName', descending: false)
+          .getDocuments()
+          .asStream();
+    }
+  }
+
+  Future<void> setTransactionToProcessed(
+      TransactionApp transaction, bool isRevenue) {
+    _authService.getCurrentUser().then((ourUser) {
+      if (isRevenue) {
+        _firestore
+            .collection("revenues")
+            .document(transaction.docID)
+            .updateData({"isProcessed": true});
+
+        _firestore
+            .collection('users')
+            .document(ourUser.uid)
+            .get()
+            .then((userSS) {
+          DocumentReference dbRefUser =
+              _firestore.collection('users').document(ourUser.uid);
+          DocumentReference dbRefCompany =
+              _firestore.collection("companies").document(transaction.from);
+
+          var currentTotalBalance =
+              userSS.data["properties"]["currentTotalBalance"];
+          var currentCashBalance =
+              userSS.data["properties"]["currentCashBalance"];
+
+          // alacağımız vardı alacağımızı temin ettiğimizi belirtiyoruz.
+          dbRefUser.updateData({
+            "properties.currentTotalBalance":
+                currentTotalBalance - transaction.amount,
+            "properties.currentCashBalance":
+                currentCashBalance + transaction.amount
+          });
+          print("dbRefCompany");
+          print(dbRefCompany.documentID);
+          dbRefCompany.updateData({
+            "currentRevenueBalance": FieldValue.increment(-transaction.amount),
+          });
+        });
+      } else {
+        _firestore
+            .collection("payments")
+            .document(transaction.docID)
+            .updateData({"isProcessed": true});
+
+        _firestore
+            .collection('users')
+            .document(ourUser.uid)
+            .get()
+            .then((userSS) {
+          DocumentReference dbRefUser =
+              _firestore.collection('users').document(ourUser.uid);
+
+          DocumentReference dbRefCompany =
+              _firestore.collection("companies").document(transaction.to);
+
+          var currentTotalBalance =
+              userSS.data["properties"]["currentTotalBalance"];
+          var currentCashBalance =
+              userSS.data["properties"]["currentCashBalance"];
+
+          dbRefUser.updateData({
+            "properties.currentTotalBalance":
+                FieldValue.increment(transaction.amount),
+            "properties.currentCashBalance":
+                FieldValue.increment(-transaction.amount)
+          });
+
+          dbRefCompany.updateData({
+            "currentPaymentBalance": FieldValue.increment(-transaction.amount),
+          });
+        });
+      }
+    });
+  }
+
+  Future<void> changeTransactionData(TransactionApp transaction, String detail,
+      double amount, bool isRevenue) {
+    print(
+        "Bilgiler: // detail: ${detail} & amount ${amount} & transactionID = ${transaction.docID}");
+    if (isRevenue) {
+      DocumentReference userRef =
+          _firestore.collection("users").document(transaction.to);
+      DocumentReference companyRef =
+          _firestore.collection("companies").document(transaction.from);
+      DocumentReference refRevenue =
+          _firestore.collection("revenues").document(transaction.docID);
+      //                 birinci değer - ikinci değer
+      double diff =
+          transaction.amount - (amount != null ? amount : transaction.amount);
+
+      refRevenue.updateData({
+        "details": detail != null ? detail : transaction.detail,
+        "amount": amount != null ? amount : transaction.amount
+      });
+
+      if (diff != 0 || amount != null) {
+        if (transaction.processed) {
+          userRef.updateData({
+            "properties.currentCashBalance":
+                FieldValue.increment(diff < 0 ? diff.abs() : -diff.abs()),
+          });
+        } else {
+          userRef.updateData({
+            "properties.currentTotalBalance":
+                FieldValue.increment(diff < 0 ? diff.abs() : -diff.abs()),
+          });
+          companyRef.updateData({
+            "currentRevenueBalance":
+                FieldValue.increment(diff < 0 ? diff.abs() : -diff.abs()),
+          });
+        }
+      }
+    } else {
+      DocumentReference userRef =
+          _firestore.collection("users").document(transaction.from);
+      DocumentReference companyRef =
+          _firestore.collection("companies").document(transaction.to);
+      DocumentReference refRevenue =
+          _firestore.collection("payments").document(transaction.docID);
+
+      //                 birinci değer - ikinci değer
+      double diff =
+          transaction.amount - (amount != null ? amount : transaction.amount);
+
+      refRevenue.updateData({
+        "details": detail != null ? detail : transaction.detail,
+        "amount": amount != null ? amount : transaction.amount
+      }).then((onValue) {
+        if (diff != 0 || amount != null) {
+          if (transaction.processed) {
+            userRef.updateData({
+              "properties.currentCashBalance":
+                  FieldValue.increment(diff < 0 ? diff.abs() : -diff.abs()),
+            });
+          } else {
+            userRef.updateData({
+              "properties.currentTotalBalance": FieldValue.increment(diff),
+            });
+            companyRef.updateData({
+              "currentPaymentBalance":
+                  FieldValue.increment(diff < 0 ? diff.abs() : -diff.abs()),
+            });
+          }
         }
       });
     }

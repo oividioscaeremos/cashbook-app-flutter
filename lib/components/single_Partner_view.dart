@@ -1,18 +1,25 @@
 import 'package:cash_book_app/classes/Company.dart';
 import 'package:cash_book_app/components/reusable_card.dart';
+import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
 import 'package:flutter/material.dart';
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'custom_tappable_container.dart';
 
 class SinglePartner extends StatelessWidget {
   ColorPalette colorPalette = new ColorPalette();
+  FirebaseCrud _firebaseCrud = new FirebaseCrud();
   static double fontSize = 24;
   final Company company;
   final Function paymentTap;
   final Function revenueTap;
+  final Function showOurDialogFunc;
 
-  SinglePartner({this.company, this.paymentTap, this.revenueTap});
+  SinglePartner(
+      {this.company,
+      this.paymentTap,
+      this.revenueTap,
+      this.showOurDialogFunc}) {}
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +29,31 @@ class SinglePartner extends StatelessWidget {
       onTap: () {},
       cardChild: Column(
         children: <Widget>[
-          Container(
-            child: Center(
-              child: Text(
-                company.companyName,
-                style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.bold,
-                  color: colorPalette.white,
+          Stack(
+            children: <Widget>[
+              Container(
+                child: Center(
+                  child: Text(
+                    company.companyName,
+                    style: TextStyle(
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: colorPalette.white,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Positioned(
+                right: 20.0,
+                child: GestureDetector(
+                  onTap: showOurDialogFunc,
+                  child: Icon(
+                    Icons.delete_forever,
+                    color: colorPalette.white,
+                  ),
+                ),
+              )
+            ],
           ),
           Container(
             width: MediaQuery.of(context).size.width,
@@ -146,7 +167,7 @@ class SinglePartner extends StatelessWidget {
                 ],
                 buttonText: company.revenueBalance.toString(),
                 textColor: colorPalette.white,
-                func: paymentTap,
+                func: revenueTap,
               ),
               SizedBox(
                 width: 10.0,
@@ -159,7 +180,7 @@ class SinglePartner extends StatelessWidget {
                 ],
                 buttonText: company.paymentBalance.toString(),
                 textColor: colorPalette.white,
-                func: revenueTap,
+                func: paymentTap,
               ),
             ],
           ),
