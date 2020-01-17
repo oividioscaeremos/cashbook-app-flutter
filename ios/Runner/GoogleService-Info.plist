@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>348346824240-j2cmc7meeoqiipssnane63o05dloa987.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.348346824240-j2cmc7meeoqiipssnane63o05dloa987</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC__WeVrRexlvijFe91WQ88LF_PM7tVXxY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>348346824240</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ilkeratabay.cashBookApp</string>
+	<key>PROJECT_ID</key>
+	<string>cashbook-app-cf63f</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cashbook-app-cf63f.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:348346824240:ios:6896e372327eed4121dff5</string>
+	<key>DATABASE_URL</key>
+	<string>https://cashbook-app-cf63f.firebaseio.com</string>
+</dict>
+</plist>
