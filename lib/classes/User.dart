@@ -6,8 +6,8 @@ class User {
   String nameAndSurname;
   String companyName;
   String eMail;
-  int currentCashBalance;
-  int currentTotalBalance;
+  double currentCashBalance;
+  double currentTotalBalance;
   List<TransactionApp> payments;
   List<TransactionApp> revenues;
   List<Company> partners;

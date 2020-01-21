@@ -29,6 +29,11 @@ dependencies:
   gradient_app_bar: ^0.0.1
   rflutter_alert: ^1.0.3
   intl: ^0.15.7
+  pdf: ^1.4.1
+  path_provider: ^1.5.1
+  printing: ^3.1.0
+  mask_text_input_formatter: ^1.0.5
+  flutter_full_pdf_viewer: ^1.0.6
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +77,15 @@ flutter:
     - family: LexendPeta
       fonts:
         - asset: lib/assets/fonts/LexendPeta-Regular.ttf
+    - family: MyriadPro
+      fonts:
+        - asset: lib/assets/fonts/MYRIADPRO-REGULAR.otf
+    - family: OpenSans
+      fonts:
+        - asset: lib/assets/fonts/OpenSans-Regular.ttf
+        - asset: lib/assets/fonts/OpenSans-Italic.ttf
+        - asset: lib/assets/fonts/OpenSans-Bold.ttf
+        - asset: lib/assets/fonts/OpenSans-BoldItalic.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

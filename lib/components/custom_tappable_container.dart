@@ -18,38 +18,34 @@ class TappableContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      /*child: FlatButton(
-        child: Text(
-          "selam",
-        ),
-        onPressed: func(companyId),
-        color: this.colors,
-      ),*/
-      child: GestureDetector(
-        onTap: () {
-          func(companyId);
-        },
-        child: Container(
-          height: 40.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.0),
-            gradient: LinearGradient(
-              colors: colors,
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+    return RaisedButton(
+      onPressed: () {
+        func(companyId);
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      padding: const EdgeInsets.all(0.0),
+      child: Ink(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: this.colors,
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
           ),
-          child: Center(
-            child: Text(
-              buttonText + " tl",
-              style: TextStyle(
-                fontSize: 16.0,
-                color: textColor,
-                fontWeight: FontWeight.bold,
-                fontFamily: "LexendPeta",
-              ),
+        ),
+        child: Container(
+          constraints: const BoxConstraints(
+            minWidth: 88.0,
+            minHeight: 36.0,
+          ), // min sizes for Material buttons
+          alignment: Alignment.center,
+          child: Text(
+            buttonText,
+            style: TextStyle(
+              color: colorPalette.white,
             ),
+            textAlign: TextAlign.center,
           ),
         ),
       ),

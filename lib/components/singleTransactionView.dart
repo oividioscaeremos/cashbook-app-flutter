@@ -71,7 +71,8 @@ class SingleTransaction extends StatelessWidget {
         child: ReusableCard(
           color: colorPalette.white54,
           onTap: dialogFun,
-          edgeInsets: 15.0,
+          edgeInsets: 0.0,
+          paddingInsets: 0.0,
           cardChild: Column(
             children: <Widget>[
               Column(

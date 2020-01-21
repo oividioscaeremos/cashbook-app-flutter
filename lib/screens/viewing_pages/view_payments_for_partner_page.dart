@@ -1,7 +1,4 @@
 import 'package:cash_book_app/classes/Transaction.dart';
-import 'package:cash_book_app/complete_pages/partners_complete.dart';
-import 'package:cash_book_app/components/custom_appBar.dart';
-import 'package:cash_book_app/components/reusable_card.dart';
 import 'package:cash_book_app/components/singleTransactionView.dart';
 import 'package:cash_book_app/screens/adding_pages/add_revenue_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
@@ -83,6 +80,8 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
             }
           });
 
+          paymentsList.sort((a, b) => a.date.compareTo(b.date));
+
           for (var d in paymentsList) {
             return Scaffold(
               appBar: PreferredSize(
@@ -153,22 +152,25 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
                             ),
                             DialogButton(
                               onPressed: () {
-                                //TODO: Change Revenue
-                                _firebaseCrud.changeTransactionData(
-                                    paymentsList[index],
-                                    _detail,
-                                    _amount,
-                                    false);
+                                setState(() {
+                                  _firebaseCrud.changeTransactionData(
+                                      paymentsList[index],
+                                      _detail,
+                                      _amount,
+                                      false);
+                                });
+
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
-                                Navigator.pushReplacement(
+
+                                /*Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         ViewPaymentsForPartner(
                                             partnerID, currUserID),
                                   ),
-                                );
+                                );*/
                               },
                               child: Text(
                                 "Change",
@@ -214,15 +216,8 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
           ),
           backgroundColor: colorPalette.darkGrey,
           body: Center(
-            child: Container(
-              child: Column(
-                children: <Widget>[
-                  Text("Loading..."),
-                  CircularProgressIndicator(
-                    strokeWidth: 5.0,
-                  ),
-                ],
-              ),
+            child: CircularProgressIndicator(
+              strokeWidth: 5.0,
             ),
           ),
         );

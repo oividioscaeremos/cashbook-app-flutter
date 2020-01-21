@@ -1,12 +1,8 @@
 import 'package:cash_book_app/classes/Transaction.dart';
-import 'package:cash_book_app/components/custom_appBar.dart';
-import 'package:cash_book_app/components/reusable_card.dart';
 import 'package:cash_book_app/components/singleTransactionView.dart';
 import 'package:cash_book_app/screens/adding_pages/add_revenue_page.dart';
-import 'package:cash_book_app/screens/home_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
-import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -92,6 +88,8 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
             }
           });
 
+          revenuesList.sort((a, b) => a.date.compareTo(b.date));
+
           for (var d in revenuesList) {
             return Scaffold(
               appBar: PreferredSize(
@@ -165,21 +163,24 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                             DialogButton(
                               onPressed: () {
                                 //TODO: Change Revenue
-                                _firebaseCrud.changeTransactionData(
-                                    revenuesList[index],
-                                    _detail,
-                                    _amount,
-                                    true);
+                                setState(() {
+                                  _firebaseCrud.changeTransactionData(
+                                      revenuesList[index],
+                                      _detail,
+                                      _amount,
+                                      true);
+                                });
+
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
-                                Navigator.pushReplacement(
+                                /*Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         ViewRevenuesForPartner(
                                             partnerID, currUserID),
                                   ),
-                                );
+                                );*/
                               },
                               child: Text(
                                 "Change",

@@ -50,9 +50,9 @@ class AuthService {
     } catch (err) {
       if (err is PlatformException) {
         if (err.code == "ERROR_EMAIL_ALREADY_IN_USE") {
-          return "ERROR_EMAIL_ALREADY_IN_USE";
+          return "Email is already in use.";
         } else {
-          return err.code;
+          return err.details;
         }
       }
     }

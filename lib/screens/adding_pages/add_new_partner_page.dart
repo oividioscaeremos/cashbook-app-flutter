@@ -2,6 +2,7 @@ import 'package:cash_book_app/classes/Company.dart';
 import 'package:cash_book_app/classes/Person.dart';
 import 'package:cash_book_app/complete_pages/home_complete.dart';
 import 'package:cash_book_app/complete_pages/partners_complete.dart';
+import 'package:cash_book_app/components/custom_phone_textbox.dart';
 import 'package:cash_book_app/components/custom_textbox.dart';
 import 'package:cash_book_app/components/reusable_card.dart';
 import 'package:cash_book_app/screens/home_page.dart';
@@ -141,13 +142,14 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                   function: companyAddressChanged,
                   keyboardType: TextInputType.text,
                   validator: isEmptyValidator,
-                  maxLines: 3,
+                  maxLines: 4,
                 ),
               ),
               ReusableCard(
                 color: Colors.orange,
                 onTap: () {},
                 edgeInsets: edgeInsets,
+                paddingInsets: edgeInsets,
                 cardChild: Column(
                   children: <Widget>[
                     Text(
@@ -174,14 +176,13 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                         SizedBox(
                           height: 10.0,
                         ),
-                        CustomTextBox(
+                        CustomPhoneTextBox(
                           size: borderRadius,
                           hintText: "Phone Number",
                           borderColor: colorPalette.white,
                           function: personOnePhoneNumberChanged,
                           keyboardType: TextInputType.number,
                           validator: isEmptyValidator,
-                          maxLines: 1,
                         ),
                       ],
                     ),
@@ -192,6 +193,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                 color: Colors.orange,
                 onTap: () {},
                 edgeInsets: edgeInsets,
+                paddingInsets: edgeInsets,
                 cardChild: Column(
                   children: <Widget>[
                     Text(
@@ -218,14 +220,13 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                         SizedBox(
                           height: 10.0,
                         ),
-                        CustomTextBox(
+                        CustomPhoneTextBox(
                           size: borderRadius,
                           hintText: "Phone Number",
                           borderColor: colorPalette.white,
                           function: personTwoPhoneNumberChanged,
                           keyboardType: TextInputType.number,
                           validator: isEmptyValidator,
-                          maxLines: 1,
                         ),
                       ],
                     ),

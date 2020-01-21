@@ -88,23 +88,23 @@ class _PartnersCompleteState extends State<PartnersComplete> {
 
           snapshot.data.documents.forEach((f) {
             Company comp = new Company(
-                uid: f.reference.documentID,
-                companyName: f.data['properties']['companyName'],
-                address: f.data['properties']['address'],
-                paymentBalance:
-                    double.parse(f.data['currentPaymentBalance'].toString()),
-                revenueBalance:
-                    double.parse(f.data['currentRevenueBalance'].toString()),
-                personOne: new Person(
-                    phoneNumber: f.data['properties']['personOne']
-                        ['phoneNumber'],
-                    nameAndSurname: f.data['properties']['personOne']
-                        ['nameAndSurname']),
-                personTwo: new Person(
-                    phoneNumber: f.data['properties']['personTwo']
-                        ['phoneNumber'],
-                    nameAndSurname: f.data['properties']['personTwo']
-                        ['nameAndSurname']));
+              uid: f.reference.documentID,
+              companyName: f.data['properties']['companyName'],
+              address: f.data['properties']['address'],
+              paymentBalance:
+                  double.parse(f.data['currentPaymentBalance'].toString()),
+              revenueBalance:
+                  double.parse(f.data['currentRevenueBalance'].toString()),
+              personOne: new Person(
+                  phoneNumber: f.data['properties']['personOne']['phoneNumber'],
+                  nameAndSurname: f.data['properties']['personOne']
+                      ['nameAndSurname']),
+              personTwo: new Person(
+                phoneNumber: f.data['properties']['personTwo']['phoneNumber'],
+                nameAndSurname: f.data['properties']['personTwo']
+                    ['nameAndSurname'],
+              ),
+            );
 
             if (currentCompanies.indexOf(comp) == -1) {
               currentCompanies.add(comp);

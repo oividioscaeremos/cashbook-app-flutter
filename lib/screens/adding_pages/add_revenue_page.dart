@@ -1,10 +1,8 @@
 import 'package:cash_book_app/classes/Company.dart';
 import 'package:cash_book_app/classes/Person.dart';
 import 'package:cash_book_app/classes/Transaction.dart';
-import 'package:cash_book_app/complete_pages/partners_complete.dart';
 import 'package:cash_book_app/components/custom_textbox.dart';
 import 'package:cash_book_app/components/reusable_card.dart';
-import 'package:cash_book_app/screens/viewing_pages/view_payments_for_partner_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
 import 'package:cash_book_app/styles/home_page_styles.dart';
@@ -182,6 +180,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                           color: Colors.orange,
                           onTap: () {},
                           edgeInsets: edgeInsets,
+                          paddingInsets: edgeInsets,
                           cardChild: Column(
                             children: <Widget>[
                               Column(
@@ -393,6 +392,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                           color: Colors.orange,
                           onTap: () {},
                           edgeInsets: edgeInsets,
+                          paddingInsets: edgeInsets,
                           cardChild: Column(
                             children: <Widget>[
                               Column(
@@ -506,6 +506,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                           color: Colors.orange,
                           onTap: () {},
                           edgeInsets: edgeInsets,
+                          paddingInsets: edgeInsets,
                           cardChild: Column(
                             children: <Widget>[
                               Column(

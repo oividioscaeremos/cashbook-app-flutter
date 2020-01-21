@@ -1,8 +1,13 @@
 import 'package:cash_book_app/classes/Company.dart';
 import 'package:cash_book_app/components/reusable_card.dart';
+import 'package:cash_book_app/screens/viewing_pages/view_payments_for_partner_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
+import 'package:cash_book_app/services/pdfGenerator.dart';
+import 'package:cash_book_app/services/pdf_viewer.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'custom_tappable_container.dart';
 
@@ -23,9 +28,27 @@ class SinglePartner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void generatePDF(String cID) {
+      PDFGenerator pdfGenerator = new PDFGenerator();
+      getTemporaryDirectory().then((output) {
+        pdfGenerator.GeneratePDFForCompany(cID).then((byteList) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PDFViewerOfOurs(
+                '${output.path}/exampleDr.pdf',
+                byteList,
+              ),
+            ),
+          );
+        });
+      });
+    }
+
     return ReusableCard(
       color: colorPalette.darkerPink,
       edgeInsets: 10.0,
+      paddingInsets: 10.0,
       onTap: () {},
       cardChild: Column(
         children: <Widget>[
@@ -58,13 +81,14 @@ class SinglePartner extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              padding: tenSymmetricPadding,
               child: ReusableCard(
                 color: colorPalette.white54,
                 edgeInsets: 0.0,
+                paddingInsets: 0.0,
                 onTap: () {},
                 cardChild: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: tenAllPadding,
                   child: Column(
                     children: <Widget>[
                       Row(
@@ -81,16 +105,15 @@ class SinglePartner extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Row(
+                                padding: tenLeftPadding,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Icon(
                                       Icons.phone,
                                       color: colorPalette.white54,
                                     ),
-                                    SizedBox(
-                                      width: 10.0,
-                                    ),
+                                    tenWidthSizedBox,
                                     Text(
                                       company.personOne.phoneNumber,
                                       style: TextStyle(
@@ -114,9 +137,14 @@ class SinglePartner extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(right: 10.0),
-                                child: Row(
+                                padding: tenRightPadding,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
+                                    Icon(
+                                      Icons.phone,
+                                      color: colorPalette.white54,
+                                    ),
                                     Text(
                                       company.personTwo != null
                                           ? company.personTwo.phoneNumber
@@ -124,13 +152,6 @@ class SinglePartner extends StatelessWidget {
                                       style: TextStyle(
                                         color: colorPalette.white,
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    Icon(
-                                      Icons.phone,
-                                      color: colorPalette.white54,
                                     ),
                                   ],
                                 ),
@@ -141,7 +162,7 @@ class SinglePartner extends StatelessWidget {
                       ),
                       Text("__"),
                       Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: tenAllPadding,
                         child: Center(
                           child: Text(
                             company.address,
@@ -159,30 +180,47 @@ class SinglePartner extends StatelessWidget {
           ),
           Row(
             children: <Widget>[
-              TappableContainer(
-                companyId: company.uid,
-                colors: [
-                  Color(0xff08bcff),
-                  Color(0xff08bcdd),
-                ],
-                buttonText: company.revenueBalance.toString(),
-                textColor: colorPalette.white,
-                func: revenueTap,
+              Expanded(
+                child: TappableContainer(
+                  companyId: company.uid,
+                  colors: [
+                    Color(0xff08bcff),
+                    Color(0xff08bcdd),
+                  ],
+                  buttonText: company.revenueBalance.toString(),
+                  textColor: colorPalette.white,
+                  func: revenueTap,
+                ),
               ),
               SizedBox(
                 width: 10.0,
               ),
-              TappableContainer(
-                companyId: company.uid,
-                colors: [
-                  Color(0xffffac84),
-                  Color(0xffff795a),
-                ],
-                buttonText: company.paymentBalance.toString(),
-                textColor: colorPalette.white,
-                func: paymentTap,
+              Expanded(
+                child: TappableContainer(
+                  companyId: company.uid,
+                  colors: [
+                    Color(0xffffac84),
+                    Color(0xffff795a),
+                  ],
+                  buttonText: company.paymentBalance.toString(),
+                  textColor: colorPalette.white,
+                  func: paymentTap,
+                ),
               ),
             ],
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: TappableContainer(
+              companyId: company.uid,
+              colors: [
+                Color(0xffffac84),
+                Color(0xffff795a),
+              ],
+              buttonText: 'Get Report for ' + company.companyName,
+              textColor: colorPalette.white,
+              func: generatePDF,
+            ),
           ),
         ],
       ),

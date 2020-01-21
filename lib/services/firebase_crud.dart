@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cash_book_app/classes/Company.dart';
 import 'package:cash_book_app/classes/Person.dart';
 import 'package:cash_book_app/classes/Transaction.dart';
+import 'package:cash_book_app/classes/User.dart';
 import 'package:cash_book_app/screens/home_page.dart';
 import 'package:cash_book_app/services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,10 +23,33 @@ class FirebaseCrud {
     return _firestore.collection('users').document(uid).snapshots();
   }
 
-  Future<String> getCurrentUserId() {
+  String getCurrentUserId() {
     _authService.getCurrentUser().then((user) {
+      print('getting user here = ${user.uid}');
       return user.uid;
     });
+  }
+
+  Future<FirebaseUser> getCurrentUserIdAsync() async {
+    return await _authService.getCurrentUser();
+  }
+
+  Stream<DocumentSnapshot> getUserDetails(String userid) {
+    return _firestore.collection('users').document(userid).get().asStream();
+  }
+
+  void updateUser(String userId, String data, bool isCompanyName) {
+    if (isCompanyName) {
+      _firestore
+          .collection('users')
+          .document(userId)
+          .updateData({'properties.companyName': data});
+    } else {
+      _firestore
+          .collection('users')
+          .document(userId)
+          .updateData({'properties.nameAndSurname': data});
+    }
   }
 
   Future<String> createCompany(Company company) async {
@@ -79,7 +103,7 @@ class FirebaseCrud {
     return _firestore
         .collection('companies')
         .where('belongsTo', isEqualTo: id)
-        //.orderBy(('properties.companyName'), descending: false)
+        //.orderBy("properties.companyName", descending: true)
         .getDocuments()
         .asStream();
   }
@@ -92,14 +116,35 @@ class FirebaseCrud {
     });
   }
 
-  /*Future<List<Transaction>> getTransaction(
-      String partnerID, bool isRevenue) async {
-    int mahmtu = 0;
-    if (isRevenue) {
-      DocumentSnapshot snapshot =
-          await _firestore.collection('revenues').document(uid).get();
-    } else {}
-  }*/
+  Future<String> getSingleCompanyNameFromIDasync(String id) async {
+    DocumentSnapshot documentSnapshot =
+        await _firestore.collection('companies').document(id).get();
+
+    return documentSnapshot.data["properties"]["companyName"];
+  }
+
+  Future<Company> getSingleCompanyFromID(String id) async {
+    DocumentSnapshot docSS =
+        await _firestore.collection('companies').document(id).get();
+
+    return new Company(
+      uid: docSS.reference.documentID,
+      companyName: docSS.data['properties']['companyName'],
+      address: docSS.data['properties']['address'],
+      paymentBalance:
+          double.parse(docSS.data['currentPaymentBalance'].toString()),
+      revenueBalance:
+          double.parse(docSS.data['currentRevenueBalance'].toString()),
+      personOne: new Person(
+          phoneNumber: docSS.data['properties']['personOne']['phoneNumber'],
+          nameAndSurname: docSS.data['properties']['personOne']
+              ['nameAndSurname']),
+      personTwo: new Person(
+        phoneNumber: docSS.data['properties']['personTwo']['phoneNumber'],
+        nameAndSurname: docSS.data['properties']['personTwo']['nameAndSurname'],
+      ),
+    );
+  }
 
   Future<void> addTransaction(
       TransactionApp ourTransaction, bool isRevenue) async {
@@ -234,6 +279,113 @@ class FirebaseCrud {
           .getDocuments()
           .asStream();
     }
+  }
+
+  Future<List<List<TransactionApp>>> getAllTransactionsForCompany(
+      String companyID, String userID) async {
+    List<TransactionApp> revenues = new List<TransactionApp>();
+    List<TransactionApp> payments = new List<TransactionApp>();
+    List<List<TransactionApp>> returnThis = new List<List<TransactionApp>>();
+
+    QuerySnapshot qs = await _firestore // this is for revenues
+        .collection('revenues')
+        .where('from', isEqualTo: companyID)
+        .where('to', isEqualTo: userID)
+        .getDocuments();
+
+    qs.documents.forEach((ds) {
+      revenues.add(new TransactionApp(
+        docID: ds.data["tID"],
+        from: ds.data["from"],
+        to: ds.data["to"],
+        date: DateTime.fromMillisecondsSinceEpoch(
+            ds.data["date"].millisecondsSinceEpoch),
+        amount: double.parse(ds.data["amount"].toString()),
+        processed: ds.data["isProcessed"],
+        detail: ds.data["details"],
+      ));
+    });
+
+    returnThis.add(revenues);
+
+    QuerySnapshot qsTwo = await _firestore // this is for revenues
+        .collection('payments')
+        .where('from', isEqualTo: userID)
+        .where('to', isEqualTo: companyID)
+        .getDocuments();
+
+    qsTwo.documents.forEach((ds) {
+      payments.add(new TransactionApp(
+          docID: ds.data["tID"],
+          from: ds.data["from"],
+          to: ds.data["to"],
+          date: DateTime.fromMillisecondsSinceEpoch(
+              ds.data["date"].millisecondsSinceEpoch),
+          amount: double.parse(ds.data["amount"].toString()),
+          processed: ds.data["isProcessed"],
+          detail: ds.data["details"]));
+    });
+
+    print('payments.length');
+    print(payments.length);
+
+    returnThis.add(payments);
+
+    return returnThis;
+  }
+
+  Future<List<List<TransactionApp>>> getAllTransactionsForUser() async {
+    FirebaseUser currUser = await _authService.getCurrentUser();
+
+    QuerySnapshot revSnapShot = await _firestore
+        .collection('revenues')
+        .where('to', isEqualTo: currUser.uid)
+        .getDocuments();
+    QuerySnapshot paySnapShot = await _firestore
+        .collection('payments')
+        .where('from', isEqualTo: currUser.uid)
+        .getDocuments();
+
+    List<TransactionApp> revList = new List<TransactionApp>();
+    List<TransactionApp> payList = new List<TransactionApp>();
+
+    revSnapShot.documents.forEach((ds) async {
+      String compName = await getSingleCompanyNameFromIDasync(ds.data['from']);
+      revList.add(new TransactionApp(
+        docID: ds.data["tID"],
+        from: '${ds.data["from"]}%$compName',
+        to: ds.data["to"],
+        date: DateTime.fromMillisecondsSinceEpoch(
+            ds.data["date"].millisecondsSinceEpoch),
+        amount: double.parse(ds.data["amount"].toString()),
+        processed: ds.data["isProcessed"],
+        detail: ds.data["details"],
+      ));
+    });
+
+    paySnapShot.documents.forEach((ds) async {
+      String compName = await getSingleCompanyNameFromIDasync(ds.data['to']);
+      payList.add(new TransactionApp(
+        docID: ds.data["tID"],
+        from: ds.data["from"],
+        to: '${ds.data["to"]}%$compName',
+        date: DateTime.fromMillisecondsSinceEpoch(
+            ds.data["date"].millisecondsSinceEpoch),
+        amount: double.parse(ds.data["amount"].toString()),
+        processed: ds.data["isProcessed"],
+        detail: ds.data["details"],
+      ));
+    });
+
+    revList.sort((a, b) => a.date.compareTo(b.date));
+    payList.sort((a, b) => a.date.compareTo(b.date));
+
+    List<List<TransactionApp>> returnList = new List<List<TransactionApp>>();
+
+    returnList.add(revList);
+    returnList.add(payList);
+
+    return returnList;
   }
 
   Future<void> setTransactionToProcessed(

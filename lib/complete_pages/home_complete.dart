@@ -52,6 +52,7 @@ class _HomeCompleteState extends State<HomeComplete> {
                   ReusableCard(
                     color: colorPalette.darkerPink,
                     edgeInsets: 10.0,
+                    paddingInsets: 10.0,
                     onTap: () {},
                     cardChild: Column(
                       children: <Widget>[
