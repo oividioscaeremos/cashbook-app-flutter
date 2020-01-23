@@ -129,130 +129,134 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
               ),
             ),
             backgroundColor: colorPalette.darkGrey,
-            body: new ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (BuildContext context, int index) {
-                  print('tID');
-                  print(snapshot.data.documents[index].documentID);
-                  List<TransactionApp> paymentsList =
-                      new List<TransactionApp>();
+            body: SafeArea(
+              child: new ListView.builder(
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    print('tID');
+                    print(snapshot.data.documents[index].documentID);
+                    List<TransactionApp> paymentsList =
+                        new List<TransactionApp>();
 
-                  print('building a new one!');
-                  print(snapshot.data.documents.length);
-                  paymentsList = buildPaymentList(snapshot);
+                    print('building a new one!');
+                    print(snapshot.data.documents.length);
+                    paymentsList = buildPaymentList(snapshot);
 
-                  return addNewPaymentWidget(
-                      paymentsList, paymentsList[index], index, () {
-                    Alert(
-                        context: context,
-                        title: "Payment",
-                        content: Column(
-                          children: <Widget>[
-                            TextField(
-                              decoration: InputDecoration(
-                                icon: Icon(Icons.description),
-                                labelText: paymentsList[index].detail,
+                    return addNewPaymentWidget(
+                        paymentsList, paymentsList[index], index, () {
+                      Alert(
+                          context: context,
+                          title: "Payment",
+                          content: Column(
+                            children: <Widget>[
+                              TextField(
+                                decoration: InputDecoration(
+                                  icon: Icon(Icons.description),
+                                  labelText: paymentsList[index].detail,
+                                ),
+                                onChanged: detailChanged,
                               ),
-                              onChanged: detailChanged,
-                            ),
-                            TextField(
-                              decoration: InputDecoration(
-                                icon: Icon(Icons.attach_money),
-                                labelText:
-                                    paymentsList[index].amount.toString(),
+                              TextField(
+                                decoration: InputDecoration(
+                                  icon: Icon(Icons.attach_money),
+                                  labelText:
+                                      paymentsList[index].amount.toString(),
+                                ),
+                                onChanged: amountChanged,
                               ),
-                              onChanged: amountChanged,
-                            ),
-                          ],
-                        ),
-                        buttons: [
-                          DialogButton(
-                            onPressed: () =>
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop(),
-                            child: Text(
-                              "Cancel",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
+                            ],
                           ),
-                          DialogButton(
-                            onPressed: () {
-                              setState(() {
-                                _firebaseCrud.changeTransactionData(
-                                    paymentsList[index],
-                                    _detail,
-                                    _amount,
-                                    false);
-                              });
-                              paymentsList = buildPaymentList(snapshot);
-
-                              Navigator.of(context, rootNavigator: true).pop();
-
-                              /*Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ViewPaymentsForPartner(
-                                            partnerID, currUserID),
-                                  ),
-                                );*/
-                            },
-                            child: Text(
-                              "Change",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                          buttons: [
+                            DialogButton(
+                              onPressed: () =>
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
                             ),
-                          )
-                        ]).show();
-                  }, () {
-                    Alert(
-                        context: context,
-                        title: "Warningo",
-                        desc: 'Do you want to delete?',
-                        buttons: [
-                          DialogButton(
-                            onPressed: () =>
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop(),
-                            child: Text(
-                              "Cancel",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                          ),
-                          DialogButton(
-                            onPressed: () async {
-                              await _firebaseCrud
-                                  .deleteTransaction(paymentsList[index], false)
-                                  .then((val) {
-                                print('it is officially  here 0!');
+                            DialogButton(
+                              onPressed: () {
                                 setState(() {
-                                  buildPaymentList(snapshot);
+                                  _firebaseCrud.changeTransactionData(
+                                      paymentsList[index],
+                                      _detail,
+                                      _amount,
+                                      false);
                                 });
+                                paymentsList = buildPaymentList(snapshot);
 
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
-                              });
 
-                              /*Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        ViewPaymentsForPartner(
-                                            partnerID, currUserID),
-                                  ),
-                                );*/
-                            },
-                            child: Text(
-                              "Delete",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                                /*Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ViewPaymentsForPartner(
+                                              partnerID, currUserID),
+                                    ),
+                                  );*/
+                              },
+                              child: Text(
+                                "Change",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            )
+                          ]).show();
+                    }, () {
+                      Alert(
+                          context: context,
+                          title: "Warningo",
+                          desc: 'Do you want to delete?',
+                          buttons: [
+                            DialogButton(
+                              onPressed: () =>
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
                             ),
-                          )
-                        ]).show();
-                  });
-                }),
+                            DialogButton(
+                              onPressed: () async {
+                                await _firebaseCrud
+                                    .deleteTransaction(
+                                        paymentsList[index], false)
+                                    .then((val) {
+                                  print('it is officially  here 0!');
+                                  setState(() {
+                                    buildPaymentList(snapshot);
+                                  });
+
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                });
+
+                                /*Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ViewPaymentsForPartner(
+                                              partnerID, currUserID),
+                                    ),
+                                  );*/
+                              },
+                              child: Text(
+                                "Delete",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            )
+                          ]).show();
+                    });
+                  }),
+            ),
           );
         }
         return Scaffold(

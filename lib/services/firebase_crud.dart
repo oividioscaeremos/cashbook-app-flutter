@@ -663,6 +663,8 @@ class FirebaseCrud {
             .document(docRef.data['from'])
             .get();
 
+        print("docRef.data['to']");
+        print(docRef.data['to']);
         _firestore.collection('users').document(docRef.data['to']).updateData({
           'properties.currentCashBalance': userSS.data['properties']
                   ['currentCashBalance'] +

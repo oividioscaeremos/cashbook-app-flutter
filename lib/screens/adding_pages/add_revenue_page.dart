@@ -97,10 +97,10 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
       }
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: colorPalette.white,
-        body: Form(
+    return Scaffold(
+      backgroundColor: colorPalette.white,
+      body: SafeArea(
+        child: Form(
           key: _globalKey,
           child: Container(
             child: StreamBuilder(
@@ -161,6 +161,15 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                   if (globalFrom != null && globalTo != null) {
                     return ListView(
                       children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: colorPalette.darkBlue,
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(edgeInsets),
                           child: Center(
@@ -373,6 +382,15 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                     print("here2");
                     return ListView(
                       children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: colorPalette.darkBlue,
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(edgeInsets),
                           child: Center(
@@ -487,6 +505,15 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                     print("here3");
                     return ListView(
                       children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: colorPalette.darkBlue,
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(edgeInsets),
                           child: Center(

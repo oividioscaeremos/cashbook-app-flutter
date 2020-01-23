@@ -67,37 +67,35 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: _onTapFunc,
-          items: allDestinations.map((Destination destination) {
-            return BottomNavigationBarItem(
-              icon: Icon(destination.icon),
-              backgroundColor: destination.color,
-              title: Text(destination.title),
-            );
-          }).toList(),
-          currentIndex: _selectedIndex,
-          backgroundColor: colorPalette.spotifyBlack,
-          unselectedItemColor: colorPalette.white54,
-          selectedItemColor: colorPalette.white,
-          unselectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.normal,
-          ),
-          selectedLabelStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: _onTapFunc,
+        items: allDestinations.map((Destination destination) {
+          return BottomNavigationBarItem(
+            icon: Icon(destination.icon),
+            backgroundColor: destination.color,
+            title: Text(destination.title),
+          );
+        }).toList(),
+        currentIndex: _selectedIndex,
+        backgroundColor: colorPalette.spotifyBlack,
+        unselectedItemColor: colorPalette.white54,
+        selectedItemColor: colorPalette.white,
+        unselectedLabelStyle: TextStyle(
+          fontWeight: FontWeight.normal,
         ),
-        backgroundColor: colorPalette.darkBlue,
-        body: SafeArea(
-          top: false,
-          child: IndexedStack(
-            index: _selectedIndex,
-            children: allDestinations.map<Widget>((Destination destination) {
-              return DestinationView(destination: destination);
-            }).toList(),
-          ),
+        selectedLabelStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      backgroundColor: colorPalette.darkBlue,
+      body: SafeArea(
+        top: false,
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: allDestinations.map<Widget>((Destination destination) {
+            return DestinationView(destination: destination);
+          }).toList(),
         ),
       ),
     );
