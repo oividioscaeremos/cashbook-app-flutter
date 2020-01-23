@@ -115,32 +115,7 @@ class _PartnersCompleteState extends State<PartnersComplete> {
       stream: _firebaseCrud.getCompanies(userid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-<<<<<<< HEAD
           ourCompanies = buildCurrentCompanies(snapshot);
-=======
-          List<Company> currentCompanies = new List<Company>();
-
-          snapshot.data.documents.forEach((f) {
-            print("data is ${f.data['currentPaymentBalance'].toString()}");
-            Company comp = new Company(
-              uid: f.reference.documentID,
-              companyName: f.data['properties']['companyName'],
-              address: f.data['properties']['address'],
-              paymentBalance:
-                  double.parse(f.data['currentPaymentBalance'].toString()),
-              revenueBalance:
-                  double.parse(f.data['currentRevenueBalance'].toString()),
-              personOne: new Person(
-                  phoneNumber: f.data['properties']['personOne']['phoneNumber'],
-                  nameAndSurname: f.data['properties']['personOne']
-                      ['nameAndSurname']),
-              personTwo: new Person(
-                phoneNumber: f.data['properties']['personTwo']['phoneNumber'],
-                nameAndSurname: f.data['properties']['personTwo']
-                    ['nameAndSurname'],
-              ),
-            );
->>>>>>> 790cab8097701cfca79cbd4a94834ce879e5e6d1
 
           for (var d in ourCompanies) {
             return Scaffold(
