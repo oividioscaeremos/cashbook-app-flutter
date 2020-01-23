@@ -7,8 +7,10 @@ import 'package:cash_book_app/screens/viewing_pages/view_upcoming_payments_page.
 import 'package:cash_book_app/screens/viewing_pages/view_upcoming_revenues_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../components/reusable_card.dart';
@@ -77,6 +79,10 @@ class _HomeCompleteState extends State<HomeComplete> {
 
   @override
   Widget build(BuildContext context) {
+    const double edgeInsets = 10.0;
+    const double paddingInsets = 10.0;
+    const double fontSizeNumber = 24.0;
+
     return StreamBuilder(
       stream: _firebaseCrud.getCurrentCashBalance(userid),
       builder: (context, snapshot) {
@@ -93,45 +99,12 @@ class _HomeCompleteState extends State<HomeComplete> {
             body: Container(
               color: colorPalette.darkGrey,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  ReusableCard(
-                    color: colorPalette.darkerPink,
-                    edgeInsets: 10.0,
-                    paddingInsets: 10.0,
-                    onTap: () {},
-                    cardChild: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Text(
-                            "Current Cash Balance:",
-                            style: h_c_CurrentBalanceTextStyle,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Center(
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    snapshot.data['properties']
-                                                ['currentCashBalance']
-                                            .toString() +
-                                        " ₺",
-                                    style: h_c_CurrentBalanceBalanceTextStyle,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
                         child: StreamBuilder(
@@ -147,8 +120,8 @@ class _HomeCompleteState extends State<HomeComplete> {
                               return Expanded(
                                 child: ReusableCard(
                                   color: colorPalette.lighterPink,
-                                  edgeInsets: 10.0,
-                                  paddingInsets: 10.0,
+                                  edgeInsets: edgeInsets,
+                                  paddingInsets: paddingInsets,
                                   onTap: () {
                                     if (counterFutureRev > 0) {
                                       Navigator.push(
@@ -165,15 +138,12 @@ class _HomeCompleteState extends State<HomeComplete> {
                                     children: <Widget>[
                                       Text(
                                         'Upcoming\nRevenues:',
-                                        style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: kUpcomingRevTextStyle,
                                       ),
                                       Text(
                                         '$counterFutureRev',
                                         style: TextStyle(
-                                          fontSize: 24.0,
+                                          fontSize: fontSizeNumber,
                                           fontWeight: FontWeight.bold,
                                           color: colorPalette.darkerPink,
                                         ),
@@ -185,14 +155,18 @@ class _HomeCompleteState extends State<HomeComplete> {
                                 ),
                               );
                             } else {
-                              return ReusableCard(
-                                onTap: () {},
-                                color: colorPalette.lighterPink,
-                                cardChild: Center(
-                                  child: CircularProgressIndicator(),
+                              return Expanded(
+                                child: ReusableCard(
+                                  color: colorPalette.lighterPink,
+                                  edgeInsets: edgeInsets,
+                                  paddingInsets: paddingInsets,
+                                  onTap: () {},
+                                  cardChild: Column(
+                                    children: <Widget>[
+                                      CircularProgressIndicator()
+                                    ],
+                                  ),
                                 ),
-                                edgeInsets: 10.0,
-                                paddingInsets: 10.0,
                               );
                             }
                           },
@@ -211,8 +185,8 @@ class _HomeCompleteState extends State<HomeComplete> {
                               return Expanded(
                                 child: ReusableCard(
                                   color: colorPalette.lighterPink,
-                                  edgeInsets: 10.0,
-                                  paddingInsets: 10.0,
+                                  edgeInsets: edgeInsets,
+                                  paddingInsets: paddingInsets,
                                   onTap: () {
                                     if (counterFuturePay > 0) {
                                       Navigator.push(
@@ -232,15 +206,12 @@ class _HomeCompleteState extends State<HomeComplete> {
                                     children: <Widget>[
                                       Text(
                                         'Upcoming\nPayments:',
-                                        style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: kUpcomingRevTextStyle,
                                       ),
                                       Text(
                                         '$counterFuturePay',
                                         style: TextStyle(
-                                          fontSize: 24.0,
+                                          fontSize: fontSizeNumber,
                                           fontWeight: FontWeight.bold,
                                           color: colorPalette.darkerPink,
                                         ),
@@ -252,14 +223,18 @@ class _HomeCompleteState extends State<HomeComplete> {
                                 ),
                               );
                             } else {
-                              return ReusableCard(
-                                onTap: () {},
-                                color: colorPalette.lighterPink,
-                                cardChild: Center(
-                                  child: CircularProgressIndicator(),
+                              return Expanded(
+                                child: ReusableCard(
+                                  color: colorPalette.lighterPink,
+                                  edgeInsets: edgeInsets,
+                                  paddingInsets: paddingInsets,
+                                  onTap: () {},
+                                  cardChild: Column(
+                                    children: <Widget>[
+                                      CircularProgressIndicator()
+                                    ],
+                                  ),
                                 ),
-                                edgeInsets: 10.0,
-                                paddingInsets: 10.0,
                               );
                             }
                           },
@@ -273,8 +248,8 @@ class _HomeCompleteState extends State<HomeComplete> {
                       Expanded(
                         child: ReusableCard(
                           color: colorPalette.dollarGreen,
-                          edgeInsets: 10.0,
-                          paddingInsets: 10.0,
+                          edgeInsets: edgeInsets,
+                          paddingInsets: paddingInsets,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -291,10 +266,7 @@ class _HomeCompleteState extends State<HomeComplete> {
                             children: <Widget>[
                               Text(
                                 'Add Revenue',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: kUpcomingRevTextStyle,
                               ),
                             ],
                           ),
@@ -303,8 +275,8 @@ class _HomeCompleteState extends State<HomeComplete> {
                       Expanded(
                         child: ReusableCard(
                           color: colorPalette.middlePink,
-                          edgeInsets: 10.0,
-                          paddingInsets: 10.0,
+                          edgeInsets: edgeInsets,
+                          paddingInsets: paddingInsets,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -321,10 +293,7 @@ class _HomeCompleteState extends State<HomeComplete> {
                             children: <Widget>[
                               Text(
                                 'Add Payment',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: kUpcomingRevTextStyle,
                               ),
                             ],
                           ),
@@ -342,15 +311,13 @@ class _HomeCompleteState extends State<HomeComplete> {
               child: CustomAppBar("Home", Icons.add_circle, () {}),
               preferredSize: new Size(
                 MediaQuery.of(context).size.width,
-                60.0,
+                kAppBarHeight,
               ),
             ),
             backgroundColor: colorPalette.darkGrey,
             body: Container(
               child: Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 5.0,
-                ),
+                child: CircularProgressIndicator(),
               ),
             ),
           );

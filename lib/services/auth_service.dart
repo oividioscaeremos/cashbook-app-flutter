@@ -61,13 +61,10 @@ class AuthService {
   // Email & password Sign In
   Future<String> signInWithEmailAndPassword(
       String thsemail, String thspassword) async {
-    print("camer here too with $thsemail and $thspassword");
-
     try {
       AuthResult res = await _firebaseAuth.signInWithEmailAndPassword(
           email: thsemail, password: thspassword);
 
-      print("got result of ${res.toString()}");
       return res.user.uid;
     } catch (err) {
       print(err);
@@ -85,9 +82,6 @@ class AuthService {
     Firestore fs = Firestore.instance;
 
     DocumentReference docRef = fs.collection('users').document(user.uid);
-    print('docRef');
-    print(docRef.documentID);
-
     return user;
   }
 }

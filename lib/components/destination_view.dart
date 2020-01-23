@@ -11,15 +11,9 @@ class DestinationView extends StatefulWidget {
 }
 
 class _DestinationViewState extends State<DestinationView> {
-  TextEditingController _textController;
-
   @override
   void initState() {
     super.initState();
-    print(widget.destination.title);
-    _textController = TextEditingController(
-      text: 'sample text: ${widget.destination.title}',
-    );
   }
 
   @override
@@ -35,7 +29,6 @@ class _DestinationViewState extends State<DestinationView> {
 
   @override
   void dispose() {
-    _textController.dispose();
     super.dispose();
   }
 }

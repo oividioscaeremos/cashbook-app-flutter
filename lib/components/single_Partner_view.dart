@@ -28,6 +28,10 @@ class SinglePartner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double edgeInsets = 10.0;
+    const double paddingInsets = 10.0;
+    const double deleteIconRight = 20.0;
+
     void generatePDF(String cID) {
       PDFGenerator pdfGenerator = new PDFGenerator();
       getTemporaryDirectory().then((output) {
@@ -47,8 +51,8 @@ class SinglePartner extends StatelessWidget {
 
     return ReusableCard(
       color: colorPalette.darkerPink,
-      edgeInsets: 10.0,
-      paddingInsets: 10.0,
+      edgeInsets: edgeInsets,
+      paddingInsets: paddingInsets,
       onTap: () {},
       cardChild: Column(
         children: <Widget>[
@@ -67,7 +71,7 @@ class SinglePartner extends StatelessWidget {
                 ),
               ),
               Positioned(
-                right: 20.0,
+                right: deleteIconRight,
                 child: GestureDetector(
                   onTap: showOurDialogFunc,
                   child: Icon(
@@ -100,9 +104,7 @@ class SinglePartner extends StatelessWidget {
                             children: <Widget>[
                               Text(
                                 company.personOne.nameAndSurname,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: kOnlyBoldTextStyle,
                               ),
                               Padding(
                                 padding: tenLeftPadding,
@@ -132,9 +134,7 @@ class SinglePartner extends StatelessWidget {
                                 company.personTwo != null
                                     ? company.personTwo.nameAndSurname
                                     : '(---)',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: kOnlyBoldTextStyle,
                               ),
                               Padding(
                                 padding: tenRightPadding,
@@ -183,10 +183,7 @@ class SinglePartner extends StatelessWidget {
               Expanded(
                 child: TappableContainer(
                   companyId: company.uid,
-                  colors: [
-                    Color(0xff08bcff),
-                    Color(0xff08bcdd),
-                  ],
+                  colors: kColorArrayRev,
                   buttonText: company.revenueBalance.toString(),
                   textColor: colorPalette.white,
                   func: revenueTap,
@@ -198,10 +195,7 @@ class SinglePartner extends StatelessWidget {
               Expanded(
                 child: TappableContainer(
                   companyId: company.uid,
-                  colors: [
-                    Color(0xffffac84),
-                    Color(0xffff795a),
-                  ],
+                  colors: kColorArrayPay,
                   buttonText: company.paymentBalance.toString(),
                   textColor: colorPalette.white,
                   func: paymentTap,
@@ -213,10 +207,7 @@ class SinglePartner extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             child: TappableContainer(
               companyId: company.uid,
-              colors: [
-                Color(0xffffac84),
-                Color(0xffff795a),
-              ],
+              colors: kColorArrayPay,
               buttonText: 'Get Report for ' + company.companyName,
               textColor: colorPalette.white,
               func: generatePDF,

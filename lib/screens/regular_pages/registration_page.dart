@@ -1,6 +1,7 @@
 import 'package:cash_book_app/components/custom_textbox.dart';
 import 'package:cash_book_app/services/auth_service.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -260,15 +261,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
               DialogButton(
                 child: Text(
                   "OKAY",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: kRegistrationStyle,
                 ),
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
-                gradient: LinearGradient(colors: [
-                  Color.fromRGBO(116, 116, 191, 1.0),
-                  Color.fromRGBO(52, 138, 199, 1.0)
-                ]),
+                gradient: kLinearGradientForOKBox,
               )
             ],
           ).show();

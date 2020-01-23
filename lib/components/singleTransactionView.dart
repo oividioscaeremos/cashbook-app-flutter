@@ -3,6 +3,7 @@ import 'package:cash_book_app/components/reusable_card.dart';
 import 'package:cash_book_app/screens/viewing_pages/view_revenues_for_partner_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,12 +27,15 @@ class SingleTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double fontSize = 18.0;
+    const double deleteIconRight = 10.0;
+
     if (list[index].processed) {
       return GestureDetector(
         onTap: dialogFun,
         child: Container(
           child: Padding(
-            padding: EdgeInsets.all(15.0),
+            padding: kTransactionPadding,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,12 +46,12 @@ class SingleTransaction extends StatelessWidget {
                       child: Center(
                         child: Text(
                           list[index].detail.toString(),
-                          style: TextStyle(fontSize: 18.0),
+                          style: TextStyle(fontSize: fontSize),
                         ),
                       ),
                     ),
                     Positioned(
-                      right: 10.0,
+                      right: deleteIconRight,
                       child: GestureDetector(
                         onTap: deleteFunction,
                         child: Icon(
@@ -58,9 +62,7 @@ class SingleTransaction extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 20.0,
-                ),
+                kTwentyHeightSizedBox,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -97,7 +99,7 @@ class SingleTransaction extends StatelessWidget {
         child: ReusableCard(
           color: colorPalette.white54,
           onTap: dialogFun,
-          edgeInsets: 20.0,
+          edgeInsets: edgeInsets,
           paddingInsets: 10.0,
           cardChild: Column(
             children: <Widget>[
@@ -110,12 +112,12 @@ class SingleTransaction extends StatelessWidget {
                         child: Center(
                           child: Text(
                             list[index].detail.toString(),
-                            style: TextStyle(fontSize: 18.0),
+                            style: TextStyle(fontSize: fontSize),
                           ),
                         ),
                       ),
                       Positioned(
-                        right: 10.0,
+                        right: deleteIconRight,
                         child: GestureDetector(
                           onTap: deleteFunction,
                           child: Icon(
@@ -126,16 +128,14 @@ class SingleTransaction extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
+                  kTwentyHeightSizedBox,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
                         list[index].amount.toString() + " ₺",
                         style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: fontSize - 2,
                           fontWeight: FontWeight.bold,
                           color: colorPalette.white,
                         ),
@@ -160,7 +160,7 @@ class SingleTransaction extends StatelessWidget {
         child: ReusableCard(
           color: Colors.red,
           onTap: dialogFun,
-          edgeInsets: 20.0,
+          edgeInsets: edgeInsets,
           paddingInsets: 10.0,
           cardChild: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -210,7 +210,6 @@ class SingleTransaction extends StatelessWidget {
                             buttons: [
                               DialogButton(
                                 onPressed: () {
-                                  //TODO: Change Revenue
                                   _firebaseCrud.setTransactionToProcessed(
                                       list[index], isRevenue);
                                   Navigator.of(context, rootNavigator: true)

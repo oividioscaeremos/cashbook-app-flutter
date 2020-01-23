@@ -10,6 +10,7 @@ import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/services/pdfGenerator.dart';
 import 'package:cash_book_app/services/pdf_viewer.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,8 @@ class _ProfileCompleteState extends State<ProfileComplete> {
   }
 
   void signOut() {
+    const double fontSize = 16.0;
+
     Alert(
       type: AlertType.warning,
       context: context,
@@ -61,7 +64,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
             "No",
             style: TextStyle(
               color: colorPalette.darkBlue,
-              fontSize: 16,
+              fontSize: fontSize,
             ),
           ),
           color: colorPalette.white54,
@@ -83,7 +86,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
             "Yes",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: fontSize,
             ),
           ),
         )
@@ -119,7 +122,9 @@ class _ProfileCompleteState extends State<ProfileComplete> {
 
   @override
   Widget build(BuildContext context) {
-    double appBarHeight = 60.0;
+    const double fontSize = 16.0;
+    const double edgeInsets = 10.0;
+
     return StreamBuilder(
       stream: _firebaseCrud.getUserDetails(userid),
       builder: (context, snapshot) {
@@ -129,7 +134,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
               child: CustomAppBar("Profile", Icons.highlight_off, signOut),
               preferredSize: new Size(
                 MediaQuery.of(context).size.width,
-                appBarHeight,
+                kAppBarHeight,
               ),
             ),
             backgroundColor: colorPalette.darkGrey,
@@ -150,12 +155,8 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                'Company Name: ${snapshot.data['properties']['companyName']}',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                                  'Company Name: ${snapshot.data['properties']['companyName']}',
+                                  style: kCompanyNameTextStyle),
                               GestureDetector(
                                 onTap: () {
                                   Alert(
@@ -184,7 +185,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                             "Cancel",
                                             style: TextStyle(
                                               color: colorPalette.darkBlue,
-                                              fontSize: 16,
+                                              fontSize: fontSize,
                                             ),
                                           ),
                                           color: colorPalette.white54,
@@ -204,7 +205,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                             "Change",
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20,
+                                              fontSize: fontSize,
                                             ),
                                           ),
                                         )
@@ -217,7 +218,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                               ),
                             ],
                           ),
-                          edgeInsets: 10.0,
+                          edgeInsets: edgeInsets,
                           paddingInsets: edgeInsets,
                         ),
                         ReusableCard(
@@ -228,9 +229,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                             children: <Widget>[
                               Text(
                                 'Name and Surname: ${snapshot.data['properties']['nameAndSurname']}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: kProfileNameAndSurnameTextStyle,
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -260,7 +259,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                             "Cancel",
                                             style: TextStyle(
                                               color: colorPalette.darkBlue,
-                                              fontSize: 16,
+                                              fontSize: fontSize,
                                             ),
                                           ),
                                           color: colorPalette.white54,
@@ -280,7 +279,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                             "Change",
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 20,
+                                              fontSize: fontSize,
                                             ),
                                           ),
                                         )
@@ -293,11 +292,11 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                               ),
                             ],
                           ),
-                          edgeInsets: 10.0,
+                          edgeInsets: edgeInsets,
                           paddingInsets: edgeInsets,
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: tenAllPadding,
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: RaisedButton(
@@ -307,27 +306,19 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                 });
                               },
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              padding: const EdgeInsets.all(0.0),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              padding: zeroAllPadding,
                               child: Ink(
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xffffac84),
-                                      Color(0xffff795a),
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  ),
+                                  gradient: kGetReportGradient,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10.0),
                                   ),
                                 ),
                                 child: Container(
-                                  constraints: const BoxConstraints(
-                                    minWidth: 88.0,
-                                    minHeight: 46.0,
-                                  ), // min sizes for Material buttons
+                                  constraints:
+                                      kBoxConstraints, // min sizes for Material buttons
                                   alignment: Alignment.center,
                                   child: Text(
                                     'Get General Report',

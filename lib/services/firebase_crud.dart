@@ -25,7 +25,6 @@ class FirebaseCrud {
 
   String getCurrentUserId() {
     _authService.getCurrentUser().then((user) {
-      print('getting user here = ${user.uid}');
       return user.uid;
     });
   }
@@ -110,8 +109,6 @@ class FirebaseCrud {
 
   String getSingleCompanyNameFromID(String id) {
     _firestore.collection('companies').document(id).get().then((snapShot) {
-      print('snapShot.data["properties"]["companyName"]');
-      print(snapShot.data["properties"]["companyName"]);
       return snapShot.data["properties"]["companyName"];
     });
   }
@@ -181,9 +178,6 @@ class FirebaseCrud {
         if (ourTransaction.processed) {
           double currentCashBalance = double.parse(
               docSS['properties']['currentCashBalance'].toString());
-
-          print("currentCashBalance");
-          print(currentCashBalance);
 
           dbRefUser.updateData({
             "properties.currentCashBalance":
@@ -564,7 +558,6 @@ class FirebaseCrud {
   }
 
   Future<void> deleteTransaction(String transactionID, bool isRevenue) async {
-    print('Here 000001 $isRevenue and ${transactionID}');
     if (isRevenue) {
       DocumentSnapshot docRef =
           await _firestore.collection('revenues').document(transactionID).get();
@@ -581,22 +574,26 @@ class FirebaseCrud {
             .document(docRef.data['from'])
             .get();
 
-        _firestore.collection('users').document(docRef.data['to']).updateData({
-          'properties.currentTotalBalance': userSS.data['properties']
-                  ['currentTotalBalance'] -
-              docRef.data['amount']
+        double currentTotalBalance =
+            userSS.data['properties']['currentTotalBalance'];
+        double amount = docRef.data['amount'];
+        await _firestore
+            .collection('users')
+            .document(docRef.data['to'])
+            .updateData({
+          'properties.currentTotalBalance': currentTotalBalance - amount
         });
 
-        _firestore
+        double currentRevenueBalance = companySS.data['currentRevenueBalance'];
+
+        await _firestore
             .collection('companies')
             .document(docRef.data['from'])
-            .updateData({
-          'currentRevenueBalance':
-              companySS.data['currentRevenueBalance'] - docRef.data['amount']
-        });
+            .updateData(
+                {'currentRevenueBalance': FieldValue.increment(-amount)});
 
         // deleting revenue's id from company's revenues array
-        _firestore
+        await _firestore
             .collection('companies')
             .document(docRef.data['from'])
             .updateData({
@@ -619,14 +616,19 @@ class FirebaseCrud {
             .document(docRef.data['to'])
             .get();
 
-        _firestore.collection('users').document(docRef.data['to']).updateData({
-          'properties.currentCashBalance': userSS.data['properties']
-                  ['currentCashBalance'] -
-              docRef.data['amount']
+        double currentCashBalance =
+            userSS.data['properties']['currentCashBalance'];
+        double amount = docRef.data['amount'];
+
+        await _firestore
+            .collection('users')
+            .document(docRef.data['to'])
+            .updateData({
+          'properties.currentCashBalance': FieldValue.increment(-amount)
         });
 
         // deleting revenue's id from company's revenues array
-        _firestore
+        await _firestore
             .collection('companies')
             .document(docRef.data['from'])
             .updateData({
@@ -639,14 +641,10 @@ class FirebaseCrud {
             .delete();
       }
     } else {
-      print('we are right here!');
       DocumentSnapshot docRef =
           await _firestore.collection('payments').document(transactionID).get();
-      print(
-          'we are right here 02! & ${docRef.data.toString()} && ${transactionID}');
 
       if (!docRef.data['isProcessed']) {
-        print('Came to here 01');
         // if the amount is not processed, then it means it is both subtracted from
         // our totalBalance so we need to add this amount
         // and it is added to the currentPaymentBalance of the company we need to subtract it
@@ -658,29 +656,28 @@ class FirebaseCrud {
             .collection('companies')
             .document(docRef.data['to'])
             .get();
-        print('Came to here 02');
 
-        _firestore
+        double currentTotalBalance =
+            userSS.data['properties']['currentTotalBalance'];
+        double amount = docRef.data['amount'];
+
+        await _firestore
             .collection('users')
             .document(docRef.data['from'])
             .updateData({
-          'properties.currentTotalBalance': userSS.data['properties']
-                  ['currentTotalBalance'] +
-              docRef.data['amount']
+          'properties.currentTotalBalance': FieldValue.increment(amount)
         });
-        print('Came to here 03');
 
-        _firestore
+        double currentPaymentBalance = companySS.data['currentPaymentBalance'];
+
+        await _firestore
             .collection('companies')
             .document(docRef.data['to'])
-            .updateData({
-          'currentPaymentBalance':
-              companySS.data['currentPaymentBalance'] - docRef.data['amount']
-        });
-        print('Came to here 04');
+            .updateData(
+                {'currentPaymentBalance': FieldValue.increment(-amount)});
 
         // deleting payments's id from company's payments array
-        _firestore
+        await _firestore
             .collection('companies')
             .document(docRef.data['to'])
             .updateData({
@@ -703,19 +700,19 @@ class FirebaseCrud {
             .document(docRef.data['from'])
             .get();
 
-        print("docRef.data['to']");
-        print(docRef.data['to']);
-        _firestore
+        double currentCashBalance =
+            userSS.data['properties']['currentCashBalance'];
+        double amount = docRef.data['amount'];
+
+        await _firestore
             .collection('users')
             .document(docRef.data['from'])
             .updateData({
-          'properties.currentCashBalance': userSS.data['properties']
-                  ['currentCashBalance'] +
-              docRef.data['amount']
+          'properties.currentCashBalance': FieldValue.increment(amount)
         });
 
         // deleting payments's id from company's payments array
-        _firestore
+        await _firestore
             .collection('companies')
             .document(docRef.data['to'])
             .updateData({
@@ -731,7 +728,6 @@ class FirebaseCrud {
   }
 
   Future<void> deleteCompany(Company company) async {
-    print('came to delete company');
     DocumentSnapshot docSS =
         await _firestore.collection('companies').document(company.uid).get();
 
@@ -753,18 +749,15 @@ class FirebaseCrud {
     var revenuesList = docSS.data['revenues'];
     var paymentsList = docSS.data['payments'];
 
-    print("docSS.data['revenues']");
-    print(docSS.data['revenues']);
-
     if (revenuesList.length >= 1) {
-      revenuesList.forEach((rID) {
-        deleteTransaction(rID, true);
+      revenuesList.forEach((rID) async {
+        await deleteTransaction(rID, true);
       });
     }
 
     if (paymentsList.length >= 1) {
-      paymentsList.forEach((rID) {
-        deleteTransaction(rID, false);
+      paymentsList.forEach((rID) async {
+        await deleteTransaction(rID, false);
       });
     }
 

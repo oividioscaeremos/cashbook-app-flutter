@@ -10,6 +10,7 @@ import 'package:cash_book_app/screens/viewing_pages/view_revenues_for_partner_pa
 import 'package:cash_book_app/services/auth_service.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -103,8 +104,6 @@ class _PartnersCompleteState extends State<PartnersComplete> {
   @override
   Widget build(BuildContext context) {
     List<Color> paymentGradient = [
-      /*Color(0xffF5D020),
-      Color(0xffF53803),*/
       colorPalette.darkBlue,
       colorPalette.darkBlue
     ];
@@ -124,7 +123,7 @@ class _PartnersCompleteState extends State<PartnersComplete> {
                     CustomAppBar("Partners", Icons.add_circle, addNewPartner),
                 preferredSize: new Size(
                   MediaQuery.of(context).size.width,
-                  60.0,
+                  kAppBarHeight,
                 ),
               ),
               backgroundColor: colorPalette.darkGrey,
@@ -144,11 +143,9 @@ class _PartnersCompleteState extends State<PartnersComplete> {
                           DialogButton(
                             child: Text(
                               "YES",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              style: kAlertButtonTextStyle,
                             ),
                             onPressed: () async {
-                              //TODO: Delete Partner
                               await _firebaseCrud
                                   .deleteCompany(ourCompanies[index]);
                               Future.delayed(Duration(milliseconds: 2300), () {
@@ -159,7 +156,7 @@ class _PartnersCompleteState extends State<PartnersComplete> {
                               });
                               Navigator.of(context, rootNavigator: true).pop();
                             },
-                            color: Color.fromRGBO(0, 179, 134, 1.0),
+                            color: kAlertColor,
                           ),
                           DialogButton(
                             child: Text(
@@ -170,10 +167,7 @@ class _PartnersCompleteState extends State<PartnersComplete> {
                             onPressed: () {
                               Navigator.of(context, rootNavigator: true).pop();
                             },
-                            gradient: LinearGradient(colors: [
-                              Color.fromRGBO(116, 116, 191, 1.0),
-                              Color.fromRGBO(52, 138, 199, 1.0)
-                            ]),
+                            gradient: kAlertGradient,
                           )
                         ],
                       ).show();
@@ -187,15 +181,13 @@ class _PartnersCompleteState extends State<PartnersComplete> {
             child: CustomAppBar("Partners", Icons.add_circle, addNewPartner),
             preferredSize: new Size(
               MediaQuery.of(context).size.width,
-              60.0,
+              kAppBarHeight,
             ),
           ),
           backgroundColor: colorPalette.darkGrey,
           body: Container(
             child: Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 5.0,
-              ),
+              child: CircularProgressIndicator(),
             ),
           ),
         );

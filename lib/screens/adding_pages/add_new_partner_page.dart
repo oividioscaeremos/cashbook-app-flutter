@@ -8,6 +8,7 @@ import 'package:cash_book_app/components/reusable_card.dart';
 import 'package:cash_book_app/screens/home_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -153,8 +154,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                 children: <Widget>[
                   Text(
                     'Person One',
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                    style: kAddPartnerPersonNameTextStyle,
                   ),
                   SizedBox(
                     height: 20.0,
@@ -197,8 +197,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                 children: <Widget>[
                   Text(
                     'Person Two',
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                    style: kAddPartnerPersonNameTextStyle,
                   ),
                   SizedBox(
                     height: 20.0,

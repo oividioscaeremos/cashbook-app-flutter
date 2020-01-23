@@ -3,6 +3,7 @@ import 'package:cash_book_app/screens/home_page.dart';
 import 'package:cash_book_app/screens/regular_pages/registration_page.dart';
 import 'package:cash_book_app/services/auth_service.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -134,13 +135,13 @@ class _WelcomePageState extends State<WelcomePage> {
               body: Form(
                 key: _globalKey,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: kHorizontalTwenty,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        padding: kHorizontalTwenty,
                         child: SizedBox(
                           height: 150,
                           child: Image.asset(
@@ -190,7 +191,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                 signIn();
                               },
                               child: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: tenAllPadding,
                                 child: Text(
                                   "Log In",
                                   style: TextStyle(
@@ -201,7 +202,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: tenAllPadding,
                             child: Text("or"),
                           ),
                           GestureDetector(

@@ -88,6 +88,9 @@ class _ViewUpcomingPaymentsForPartnerState
       stream: _firebaseCrud.getPaymentsForUser(userID),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          List<TransactionApp> paymentsList = new List<TransactionApp>();
+
+          paymentsList = buildPaymentList(snapshot);
           return Scaffold(
             appBar: PreferredSize(
               preferredSize: Size(MediaQuery.of(context).size.width, 60),
@@ -111,13 +114,8 @@ class _ViewUpcomingPaymentsForPartnerState
             ),
             backgroundColor: colorPalette.darkGrey,
             body: new ListView.builder(
-                itemCount: snapshot.data.documents.length - 1,
+                itemCount: paymentsList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  List<TransactionApp> paymentsList =
-                      new List<TransactionApp>();
-
-                  paymentsList = buildPaymentList(snapshot);
-
                   return addNewPaymentWidget(
                       paymentsList, paymentsList[index], index, () {
                     Alert(

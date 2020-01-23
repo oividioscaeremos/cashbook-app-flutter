@@ -95,6 +95,9 @@ class _ViewUpcomingRevenuesForPartnerState
       stream: _firebaseCrud.getRevenuesForUser(userID),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          List<TransactionApp> revenuesList = new List<TransactionApp>();
+
+          revenuesList = buildRevenueList(snapshot);
           return Scaffold(
             appBar: PreferredSize(
               preferredSize: Size(MediaQuery.of(context).size.width, 60),
@@ -119,12 +122,8 @@ class _ViewUpcomingRevenuesForPartnerState
             backgroundColor: colorPalette.darkGrey,
             body: new ListView.builder(
                 dragStartBehavior: DragStartBehavior.start,
-                itemCount: snapshot.data.documents.length - 1,
+                itemCount: revenuesList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  List<TransactionApp> revenuesList =
-                      new List<TransactionApp>();
-
-                  revenuesList = buildRevenueList(snapshot);
                   print('revlistleng ${revenuesList.length}');
 
                   return addNewRevenueWidget(
