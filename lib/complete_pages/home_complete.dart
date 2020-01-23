@@ -102,6 +102,42 @@ class _HomeCompleteState extends State<HomeComplete> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  ReusableCard(
+                    color: colorPalette.darkerPink,
+                    edgeInsets: 10.0,
+                    paddingInsets: 10.0,
+                    onTap: () {},
+                    cardChild: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Text(
+                            "Current Cash Balance:",
+                            style: h_c_CurrentBalanceTextStyle,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    snapshot.data['properties']
+                                                ['currentCashBalance']
+                                            .toString() +
+                                        " ₺",
+                                    style: h_c_CurrentBalanceBalanceTextStyle,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,

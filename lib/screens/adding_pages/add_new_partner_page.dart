@@ -94,6 +94,14 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
       }
     }
 
+    String phoneNumberValidator(String input) {
+      if (input.isEmpty) {
+        return 'Phone number cannot be empty.';
+      } else if (input.length != 19) {
+        return 'Please enter a valid phone number.';
+      }
+    }
+
     return Scaffold(
       backgroundColor: colorPalette.white,
       body: Form(
@@ -181,7 +189,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                         borderColor: colorPalette.white,
                         function: personOnePhoneNumberChanged,
                         keyboardType: TextInputType.number,
-                        validator: isEmptyValidator,
+                        validator: phoneNumberValidator,
                       ),
                     ],
                   ),
@@ -224,7 +232,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                         borderColor: colorPalette.white,
                         function: personTwoPhoneNumberChanged,
                         keyboardType: TextInputType.number,
-                        validator: isEmptyValidator,
+                        validator: phoneNumberValidator,
                       ),
                     ],
                   ),
