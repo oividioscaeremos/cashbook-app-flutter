@@ -300,7 +300,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                       hintText: "Amount",
                                       borderColor: colorPalette.darkBlue,
                                       function: amountChanged,
-                                      keyboardType: TextInputType.text,
+                                      keyboardType: TextInputType.number,
                                       validator: isEmptyValidator,
                                       maxLines: 1,
                                     ),
@@ -443,7 +443,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                       hintText: "Amount",
                                       borderColor: colorPalette.lighterPink,
                                       function: amountChanged,
-                                      keyboardType: TextInputType.text,
+                                      keyboardType: TextInputType.number,
                                       validator: isEmptyValidator,
                                       maxLines: 1,
                                     ),
@@ -492,8 +492,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                           child: Center(
                             child: Text(
                               globalFrom == currUserID
-                                  ? "New Payment to " + otherCompanyName
-                                  : "New Revenue from " + otherCompanyName,
+                                  ? "New Payment"
+                                  : "New Revenue",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24.0,

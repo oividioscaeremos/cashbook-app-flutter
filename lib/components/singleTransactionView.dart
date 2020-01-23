@@ -15,8 +15,14 @@ class SingleTransaction extends StatelessWidget {
   List<TransactionApp> list;
   int index;
   Function dialogFun;
+  Function deleteFunction;
   bool isRevenue;
-  SingleTransaction({this.list, this.index, this.dialogFun, this.isRevenue});
+  SingleTransaction(
+      {this.list,
+      this.index,
+      this.dialogFun,
+      this.isRevenue,
+      this.deleteFunction});
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +33,30 @@ class SingleTransaction extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(15.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  list[index].detail.toString(),
-                  style: TextStyle(fontSize: 18.0),
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      child: Center(
+                        child: Text(
+                          list[index].detail.toString(),
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 10.0,
+                      child: GestureDetector(
+                        onTap: deleteFunction,
+                        child: Icon(
+                          Icons.delete_forever,
+                          color: colorPalette.white54,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 20.0,
@@ -71,16 +97,34 @@ class SingleTransaction extends StatelessWidget {
         child: ReusableCard(
           color: colorPalette.white54,
           onTap: dialogFun,
-          edgeInsets: 0.0,
-          paddingInsets: 0.0,
+          edgeInsets: 20.0,
+          paddingInsets: 10.0,
           cardChild: Column(
             children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    list[index].detail.toString(),
-                    style: TextStyle(fontSize: 18.0),
+                  Stack(
+                    children: <Widget>[
+                      Container(
+                        child: Center(
+                          child: Text(
+                            list[index].detail.toString(),
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 10.0,
+                        child: GestureDetector(
+                          onTap: deleteFunction,
+                          child: Icon(
+                            Icons.delete_forever,
+                            color: colorPalette.white54,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 20.0,
@@ -116,7 +160,8 @@ class SingleTransaction extends StatelessWidget {
         child: ReusableCard(
           color: Colors.red,
           onTap: dialogFun,
-          edgeInsets: 15.0,
+          edgeInsets: 20.0,
+          paddingInsets: 10.0,
           cardChild: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,

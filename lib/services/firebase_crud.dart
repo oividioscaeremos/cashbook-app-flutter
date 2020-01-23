@@ -325,10 +325,6 @@ class FirebaseCrud {
           processed: ds.data["isProcessed"],
           detail: ds.data["details"]));
     });
-
-    print('payments.length');
-    print(payments.length);
-
     returnThis.add(payments);
 
     return returnThis;
@@ -419,8 +415,6 @@ class FirebaseCrud {
             "properties.currentCashBalance":
                 currentCashBalance + transaction.amount
           });
-          print("dbRefCompany");
-          print(dbRefCompany.documentID);
           dbRefCompany.updateData({
             "currentRevenueBalance": FieldValue.increment(-transaction.amount),
           });
@@ -464,8 +458,6 @@ class FirebaseCrud {
 
   Future<void> changeTransactionData(TransactionApp transaction, String detail,
       double amount, bool isRevenue) {
-    print(
-        "Bilgiler: // detail: ${detail} & amount ${amount} & transactionID = ${transaction.docID}");
     if (isRevenue) {
       DocumentReference userRef =
           _firestore.collection("users").document(transaction.to);
@@ -532,6 +524,110 @@ class FirebaseCrud {
           }
         }
       });
+    }
+  }
+
+  Stream<QuerySnapshot> getRevenuesForUser(String userid) {
+    Stream<QuerySnapshot> returnVal = _firestore
+        .collection('revenues')
+        .where('to', isEqualTo: userid)
+        .getDocuments()
+        .asStream();
+
+    return returnVal;
+  }
+
+  Stream<QuerySnapshot> getPaymentsForUser(String userid) {
+    return _firestore
+        .collection('payments')
+        .where('from', isEqualTo: userid)
+        .getDocuments()
+        .asStream();
+  }
+
+  Future<void> deleteTransaction(
+      TransactionApp transaction, bool isRevenue) async {
+    print('Here 000001 $isRevenue and ${transaction.docID}');
+    if (isRevenue) {
+      DocumentSnapshot docRef = await _firestore
+          .collection('revenues')
+          .document(transaction.docID)
+          .get();
+
+      if (!docRef.data['isProcessed']) {
+        // if the amount is not processed, then it means it is both added to
+        // our totalBalance and it's company's revenue budget, we have to subtract those
+        DocumentSnapshot userSS = await _firestore
+            .collection('users')
+            .document(docRef.data['to'])
+            .get();
+        DocumentSnapshot companySS = await _firestore
+            .collection('companies')
+            .document(docRef.data['from'])
+            .get();
+
+        _firestore.collection('users').document(docRef.data['to']).updateData({
+          'properties.currentTotalBalance': userSS.data['properties']
+                  ['currentTotalBalance'] -
+              docRef.data['amount']
+        });
+
+        _firestore
+            .collection('companies')
+            .document(docRef.data['from'])
+            .updateData({
+          'currentRevenueBalance':
+              companySS.data['currentRevenueBalance'] - docRef.data['amount']
+        });
+
+        _firestore.collection('revenues').document(transaction.docID).delete();
+      } else {
+        _firestore.collection('revenues').document(transaction.docID).delete();
+      }
+    } else {
+      print('we are right here!');
+      DocumentSnapshot docRef = await _firestore
+          .collection('payments')
+          .document(transaction.docID)
+          .get();
+      print('we are right here 02!');
+
+      if (!docRef.data['isProcessed']) {
+        print('Came to here 01');
+        // if the amount is not processed, then it means it is both subtracted from
+        // our totalBalance so we need to add this amount
+        // and it is added to the currentPaymentBalance of the company we need to subtract it
+        DocumentSnapshot userSS = await _firestore
+            .collection('users')
+            .document(docRef.data['from'])
+            .get();
+        DocumentSnapshot companySS = await _firestore
+            .collection('companies')
+            .document(docRef.data['to'])
+            .get();
+        print('Came to here 02');
+
+        _firestore.collection('users').document(docRef.data['to']).updateData({
+          'properties.currentTotalBalance': userSS.data['properties']
+                  ['currentTotalBalance'] +
+              docRef.data['amount']
+        });
+        print('Came to here 03');
+
+        _firestore
+            .collection('companies')
+            .document(docRef.data['to'])
+            .updateData({
+          'currentPaymentBalance':
+              companySS.data['currentPaymentBalance'] - docRef.data['amount']
+        });
+        print('Came to here 04');
+
+        _firestore.collection('payments').document(transaction.docID).delete();
+        print('Came to here 05');
+      } else {
+        _firestore.collection('payments').document(transaction.docID).delete();
+      }
     }
   }
 }

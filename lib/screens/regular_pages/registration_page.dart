@@ -267,7 +267,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ],
           ).show();
         } else {
-          Navigator.of(context, rootNavigator: true).pop();
+          Navigator.pop(context);
         }
       });
     }

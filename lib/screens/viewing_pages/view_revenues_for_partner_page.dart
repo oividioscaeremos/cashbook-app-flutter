@@ -32,6 +32,12 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
   String _detail;
   double _amount;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   void addNewRevenue() {
     Navigator.push(
         context,
@@ -43,13 +49,14 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                 )));
   }
 
-  Widget addNewRevenueWidget(
-      TransactionApp company, int index, Function dialogFun) {
+  Widget addNewRevenueWidget(TransactionApp company, int index,
+      Function dialogFun, Function deleteFun) {
     return SingleTransaction(
       list: revenuesList,
       index: index,
       dialogFun: dialogFun,
       isRevenue: true,
+      deleteFunction: deleteFun,
     );
   }
 
@@ -61,35 +68,38 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
     _detail = input;
   }
 
+  void buildRevList(AsyncSnapshot<QuerySnapshot> snapshot) {
+    print('called this');
+    revenuesList = new List<TransactionApp>();
+
+    //List snapShotDoc = snapshot.data.documents;
+    snapshot.data.documents.forEach((f) {
+      TransactionApp rev = new TransactionApp(
+        docID: f.data["tID"],
+        from: f.data["from"],
+        to: f.data["to"],
+        date: DateTime.fromMillisecondsSinceEpoch(
+            f.data["date"].millisecondsSinceEpoch),
+        amount: double.parse(f.data["amount"].toString()),
+        processed: f.data["isProcessed"],
+        detail: f.data["details"],
+      );
+
+      if (revenuesList.indexOf(rev) == -1) {
+        revenuesList.add(rev);
+      }
+    });
+
+    revenuesList.sort((a, b) => a.date.compareTo(b.date));
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _firebaseCrud.getTransactions(userID, partnerID, true),
-      builder: (context, snapshot) {
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
-          revenuesList = new List<TransactionApp>();
-
-          List snapShotDoc = snapshot.data.documents;
-
-          snapshot.data.documents.forEach((f) {
-            TransactionApp rev = new TransactionApp(
-              docID: f.data["tID"],
-              from: f.data["from"],
-              to: f.data["to"],
-              date: DateTime.fromMillisecondsSinceEpoch(
-                  f.data["date"].millisecondsSinceEpoch),
-              amount: double.parse(f.data["amount"].toString()),
-              processed: f.data["isProcessed"],
-              detail: f.data["details"],
-            );
-
-            if (revenuesList.indexOf(rev) == -1) {
-              revenuesList.add(rev);
-            }
-          });
-
-          revenuesList.sort((a, b) => a.date.compareTo(b.date));
-
+          buildRevList(snapshot);
           for (var d in revenuesList) {
             return Scaffold(
               appBar: PreferredSize(
@@ -169,10 +179,12 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                                       _detail,
                                       _amount,
                                       true);
+                                  buildRevList(snapshot);
                                 });
 
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
+
                                 /*Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -184,6 +196,43 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                               },
                               child: Text(
                                 "Change",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            )
+                          ]).show();
+                    }, () {
+                      Alert(
+                          context: context,
+                          title: "Warningo",
+                          desc: 'Do you want to delete?',
+                          buttons: [
+                            DialogButton(
+                              onPressed: () =>
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            ),
+                            DialogButton(
+                              onPressed: () {
+                                setState(() {
+                                  _firebaseCrud
+                                      .deleteTransaction(
+                                          revenuesList[index], true)
+                                      .whenComplete(() {
+                                    buildRevList(snapshot);
+
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop();
+                                  });
+                                });
+                              },
+                              child: Text(
+                                "Delete",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
                               ),
