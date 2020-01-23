@@ -10,6 +10,7 @@ import 'package:cash_book_app/screens/viewing_pages/view_revenues_for_partner_pa
 import 'package:cash_book_app/services/auth_service.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -69,6 +70,36 @@ class _PartnersCompleteState extends State<PartnersComplete> {
     );
   }
 
+  List<Company> buildCurrentCompanies(AsyncSnapshot<QuerySnapshot> snapshot) {
+    List<Company> currentCompanies = new List<Company>();
+
+    snapshot.data.documents.forEach((f) {
+      Company comp = new Company(
+        uid: f.reference.documentID,
+        companyName: f.data['properties']['companyName'],
+        address: f.data['properties']['address'],
+        paymentBalance:
+            double.parse(f.data['currentPaymentBalance'].toString()),
+        revenueBalance:
+            double.parse(f.data['currentRevenueBalance'].toString()),
+        personOne: new Person(
+            phoneNumber: f.data['properties']['personOne']['phoneNumber'],
+            nameAndSurname: f.data['properties']['personOne']
+                ['nameAndSurname']),
+        personTwo: new Person(
+          phoneNumber: f.data['properties']['personTwo']['phoneNumber'],
+          nameAndSurname: f.data['properties']['personTwo']['nameAndSurname'],
+        ),
+      );
+
+      if (currentCompanies.indexOf(comp) == -1) {
+        currentCompanies.add(comp);
+      }
+    });
+
+    return currentCompanies;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Color> paymentGradient = [
@@ -84,36 +115,9 @@ class _PartnersCompleteState extends State<PartnersComplete> {
       stream: _firebaseCrud.getCompanies(userid),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<Company> currentCompanies = new List<Company>();
+          ourCompanies = buildCurrentCompanies(snapshot);
 
-          snapshot.data.documents.forEach((f) {
-            Company comp = new Company(
-              uid: f.reference.documentID,
-              companyName: f.data['properties']['companyName'],
-              address: f.data['properties']['address'],
-              paymentBalance:
-                  double.parse(f.data['currentPaymentBalance'].toString()),
-              revenueBalance:
-                  double.parse(f.data['currentRevenueBalance'].toString()),
-              personOne: new Person(
-                  phoneNumber: f.data['properties']['personOne']['phoneNumber'],
-                  nameAndSurname: f.data['properties']['personOne']
-                      ['nameAndSurname']),
-              personTwo: new Person(
-                phoneNumber: f.data['properties']['personTwo']['phoneNumber'],
-                nameAndSurname: f.data['properties']['personTwo']
-                    ['nameAndSurname'],
-              ),
-            );
-
-            if (currentCompanies.indexOf(comp) == -1) {
-              currentCompanies.add(comp);
-            }
-          });
-
-          ourCompanies = currentCompanies;
-
-          for (var d in currentCompanies) {
+          for (var d in ourCompanies) {
             return Scaffold(
               appBar: PreferredSize(
                 child:
@@ -143,8 +147,16 @@ class _PartnersCompleteState extends State<PartnersComplete> {
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               //TODO: Delete Partner
+                              await _firebaseCrud
+                                  .deleteCompany(ourCompanies[index]);
+                              Future.delayed(Duration(milliseconds: 2300), () {
+                                setState(() {
+                                  ourCompanies =
+                                      buildCurrentCompanies(snapshot);
+                                });
+                              });
                               Navigator.of(context, rootNavigator: true).pop();
                             },
                             color: Color.fromRGBO(0, 179, 134, 1.0),

@@ -58,8 +58,8 @@ class FirebaseCrud {
     Firestore.instance.runTransaction((Transaction transaction) async {
       await Firestore.instance.collection('companies').add({
         'belongsTo': currentUser.uid,
-        'currentPaymentBalance': 0,
-        'currentRevenueBalance': 0,
+        'currentPaymentBalance': 0.0,
+        'currentRevenueBalance': 0.0,
         'payments': [],
         'revenues': [],
         'properties': {
@@ -169,6 +169,15 @@ class FirebaseCrud {
         DocumentReference dbRefUser =
             _firestore.collection('users').document(curruser.uid);
 
+        // adding revenue's id to company's revenues array
+        _firestore
+            .collection('companies')
+            .document(ourTransaction.from)
+            .updateData({
+          'revenues':
+              FieldValue.arrayUnion([docReferenceOfTheTransaction.documentID])
+        });
+
         if (ourTransaction.processed) {
           double currentCashBalance = double.parse(
               docSS['properties']['currentCashBalance'].toString());
@@ -222,6 +231,15 @@ class FirebaseCrud {
             await _firestore.collection('users').document(curruser.uid).get();
         DocumentReference dbRefUser =
             _firestore.collection('users').document(curruser.uid);
+
+        // adding payments's id to company's payments array
+        _firestore
+            .collection('companies')
+            .document(ourTransaction.to)
+            .updateData({
+          'payments':
+              FieldValue.arrayUnion([docReferenceOfTheTransaction.documentID])
+        });
 
         docReferenceOfTheTransaction
             .updateData({"tID": docReferenceOfTheTransaction.documentID});
@@ -545,14 +563,11 @@ class FirebaseCrud {
         .asStream();
   }
 
-  Future<void> deleteTransaction(
-      TransactionApp transaction, bool isRevenue) async {
-    print('Here 000001 $isRevenue and ${transaction.docID}');
+  Future<void> deleteTransaction(String transactionID, bool isRevenue) async {
+    print('Here 000001 $isRevenue and ${transactionID}');
     if (isRevenue) {
-      DocumentSnapshot docRef = await _firestore
-          .collection('revenues')
-          .document(transaction.docID)
-          .get();
+      DocumentSnapshot docRef =
+          await _firestore.collection('revenues').document(transactionID).get();
 
       if (!docRef.data['isProcessed']) {
         // if the amount is not processed, then it means it is both added to
@@ -580,16 +595,24 @@ class FirebaseCrud {
               companySS.data['currentRevenueBalance'] - docRef.data['amount']
         });
 
-        return Firestore.instance
+        // deleting revenue's id from company's revenues array
+        _firestore
+            .collection('companies')
+            .document(docRef.data['from'])
+            .updateData({
+          'revenues': FieldValue.arrayRemove([transactionID])
+        });
+
+        return await Firestore.instance
             .collection('revenues')
-            .document(transaction.docID)
+            .document(transactionID)
             .delete();
       } else {
         // if the revenue was processed it means it has been added to our user's
         // cash balance so we need to subtract it
         DocumentSnapshot docRef = await _firestore
             .collection('revenues')
-            .document(transaction.docID)
+            .document(transactionID)
             .get();
         DocumentSnapshot userSS = await _firestore
             .collection('users')
@@ -602,19 +625,25 @@ class FirebaseCrud {
               docRef.data['amount']
         });
 
-        return Firestore.instance
+        // deleting revenue's id from company's revenues array
+        _firestore
+            .collection('companies')
+            .document(docRef.data['from'])
+            .updateData({
+          'revenues': FieldValue.arrayRemove([transactionID])
+        });
+
+        return await Firestore.instance
             .collection('revenues')
-            .document(transaction.docID)
+            .document(transactionID)
             .delete();
       }
     } else {
       print('we are right here!');
-      DocumentSnapshot docRef = await _firestore
-          .collection('payments')
-          .document(transaction.docID)
-          .get();
+      DocumentSnapshot docRef =
+          await _firestore.collection('payments').document(transactionID).get();
       print(
-          'we are right here 02! & ${docRef.data.toString()} && ${transaction.docID}');
+          'we are right here 02! & ${docRef.data.toString()} && ${transactionID}');
 
       if (!docRef.data['isProcessed']) {
         print('Came to here 01');
@@ -631,7 +660,10 @@ class FirebaseCrud {
             .get();
         print('Came to here 02');
 
-        _firestore.collection('users').document(docRef.data['to']).updateData({
+        _firestore
+            .collection('users')
+            .document(docRef.data['from'])
+            .updateData({
           'properties.currentTotalBalance': userSS.data['properties']
                   ['currentTotalBalance'] +
               docRef.data['amount']
@@ -647,16 +679,24 @@ class FirebaseCrud {
         });
         print('Came to here 04');
 
+        // deleting payments's id from company's payments array
+        _firestore
+            .collection('companies')
+            .document(docRef.data['to'])
+            .updateData({
+          'payments': FieldValue.arrayRemove([transactionID])
+        });
+
         return await Firestore.instance
             .collection('payments')
-            .document(transaction.docID)
+            .document(transactionID)
             .delete();
       } else {
         // if the payment was processed it means that it has been subtracted from
         // our user's cashBalance so we need to add it.
         DocumentSnapshot docRef = await _firestore
             .collection('payments')
-            .document(transaction.docID)
+            .document(transactionID)
             .get();
         DocumentSnapshot userSS = await _firestore
             .collection('users')
@@ -665,17 +705,71 @@ class FirebaseCrud {
 
         print("docRef.data['to']");
         print(docRef.data['to']);
-        _firestore.collection('users').document(docRef.data['to']).updateData({
+        _firestore
+            .collection('users')
+            .document(docRef.data['from'])
+            .updateData({
           'properties.currentCashBalance': userSS.data['properties']
                   ['currentCashBalance'] +
               docRef.data['amount']
         });
 
+        // deleting payments's id from company's payments array
+        _firestore
+            .collection('companies')
+            .document(docRef.data['to'])
+            .updateData({
+          'payments': FieldValue.arrayRemove([transactionID])
+        });
+
         return await Firestore.instance
             .collection('payments')
-            .document(transaction.docID)
+            .document(transactionID)
             .delete();
       }
     }
+  }
+
+  Future<void> deleteCompany(Company company) async {
+    print('came to delete company');
+    DocumentSnapshot docSS =
+        await _firestore.collection('companies').document(company.uid).get();
+
+    // Deleting partner from our partners.
+    QuerySnapshot userSnapshot = await _firestore
+        .collection('users')
+        .where('partners', arrayContains: company.uid)
+        .getDocuments();
+
+    userSnapshot.documents.forEach((us) {
+      DocumentReference userRef =
+          _firestore.collection('users').document(us.documentID);
+      userRef.updateData({
+        'partners': FieldValue.arrayRemove([docSS.documentID])
+      });
+    });
+    // deleting from partners end.
+
+    var revenuesList = docSS.data['revenues'];
+    var paymentsList = docSS.data['payments'];
+
+    print("docSS.data['revenues']");
+    print(docSS.data['revenues']);
+
+    if (revenuesList.length >= 1) {
+      revenuesList.forEach((rID) {
+        deleteTransaction(rID, true);
+      });
+    }
+
+    if (paymentsList.length >= 1) {
+      paymentsList.forEach((rID) {
+        deleteTransaction(rID, false);
+      });
+    }
+
+    Future.delayed(Duration(milliseconds: 2000), () async {
+      return await docSS.reference.delete();
+    });
   }
 }

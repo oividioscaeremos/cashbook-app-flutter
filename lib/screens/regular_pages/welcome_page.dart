@@ -68,10 +68,14 @@ class _WelcomePageState extends State<WelcomePage> {
     void signIn() async {
       final state = _globalKey.currentState;
       if (state.validate()) {
+        print("here");
         if (userId == null) {
           try {
+            print("here3");
             userId =
                 await authService.signInWithEmailAndPassword(email, password);
+
+            print("here2");
           } catch (err) {
             Alert(
               context: context,
@@ -106,7 +110,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 MaterialPageRoute(builder: (context) => HomePage(userId)));
           }
         });
-      }
+      } else {}
     }
 
     return FutureBuilder<FirebaseUser>(

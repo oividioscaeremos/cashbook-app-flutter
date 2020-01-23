@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cash_book_app/components/custom_appBar.dart';
 import 'package:cash_book_app/components/reusable_card.dart';
+import 'package:cash_book_app/screens/adding_pages/add_revenue_page.dart';
 import 'package:cash_book_app/screens/viewing_pages/view_upcoming_payments_page.dart';
 import 'package:cash_book_app/screens/viewing_pages/view_upcoming_revenues_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
@@ -10,6 +13,10 @@ import 'package:flutter/material.dart';
 
 String userid = "";
 double _currentCashBalance = 0.0;
+int counterFutureRev = 0, dueRev = 0;
+double expectedRev = 0.0;
+int counterFuturePay = 0, duePay = 0;
+double expectedPay = 0;
 
 class HomeComplete extends StatefulWidget {
   HomeComplete(String userID) {
@@ -28,6 +35,42 @@ class _HomeCompleteState extends State<HomeComplete> {
   void initState() {
     super.initState();
     //refreshPage();
+  }
+
+  void buildFromRevSnapshot(AsyncSnapshot<QuerySnapshot> revSnapshot) {
+    counterFutureRev = 0;
+    dueRev = 0;
+    expectedRev = 0.0;
+    revSnapshot.data.documents.forEach((d) {
+      if (!d.data['isProcessed']) {
+        if (DateTime.fromMillisecondsSinceEpoch(
+                    d.data["date"].millisecondsSinceEpoch)
+                .compareTo(DateTime.now()) <=
+            0) {
+          dueRev++;
+        }
+        counterFutureRev++;
+        expectedRev += d.data['amount'];
+      }
+    });
+  }
+
+  void buildFromPaySnapshot(AsyncSnapshot<QuerySnapshot> paySnapshot) {
+    counterFuturePay = 0;
+    duePay = 0;
+    expectedPay = 0;
+    paySnapshot.data.documents.forEach((d) {
+      if (!d.data['isProcessed']) {
+        if (DateTime.fromMillisecondsSinceEpoch(
+                    d.data["date"].millisecondsSinceEpoch)
+                .compareTo(DateTime.now()) <=
+            0) {
+          duePay++;
+        }
+        counterFuturePay++;
+        expectedPay += d.data['amount'];
+      }
+    });
   }
 
   @override
@@ -94,20 +137,10 @@ class _HomeCompleteState extends State<HomeComplete> {
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> revSnapshot) {
                             if (revSnapshot.hasData) {
-                              int counterFutureRev = 0, dueRev = 0;
-                              double expectedRev = 0.0;
-                              revSnapshot.data.documents.forEach((d) {
-                                if (!d.data['isProcessed']) {
-                                  if (DateTime.fromMillisecondsSinceEpoch(d
-                                              .data["date"]
-                                              .millisecondsSinceEpoch)
-                                          .compareTo(DateTime.now()) <=
-                                      0) {
-                                    dueRev++;
-                                  }
-                                  counterFutureRev++;
-                                  expectedRev += d.data['amount'];
-                                }
+                              buildFromRevSnapshot(revSnapshot);
+
+                              Timer.periodic(Duration(seconds: 5), (Timer t) {
+                                buildFromRevSnapshot(revSnapshot);
                               });
                               return Expanded(
                                 child: ReusableCard(
@@ -161,20 +194,9 @@ class _HomeCompleteState extends State<HomeComplete> {
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> paySnapshot) {
                             if (paySnapshot.hasData) {
-                              int counterFuturePay = 0, duePay = 0;
-                              double expectedPay = 0;
-                              paySnapshot.data.documents.forEach((d) {
-                                if (!d.data['isProcessed']) {
-                                  if (DateTime.fromMillisecondsSinceEpoch(d
-                                              .data["date"]
-                                              .millisecondsSinceEpoch)
-                                          .compareTo(DateTime.now()) <=
-                                      0) {
-                                    duePay++;
-                                  }
-                                  counterFuturePay++;
-                                  expectedPay += d.data['amount'];
-                                }
+                              buildFromPaySnapshot(paySnapshot);
+                              Timer.periodic(Duration(seconds: 5), (Timer t) {
+                                buildFromPaySnapshot(paySnapshot);
                               });
                               return Expanded(
                                 child: ReusableCard(
@@ -225,6 +247,71 @@ class _HomeCompleteState extends State<HomeComplete> {
                           },
                         ),
                       )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                        child: ReusableCard(
+                          color: colorPalette.dollarGreen,
+                          edgeInsets: 10.0,
+                          paddingInsets: 10.0,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NewTransactionPage(
+                                  currUser: userid,
+                                  to: userid,
+                                  from: null,
+                                ),
+                              ),
+                            );
+                          },
+                          cardChild: Column(
+                            children: <Widget>[
+                              Text(
+                                'Add Revenue',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: ReusableCard(
+                          color: colorPalette.middlePink,
+                          edgeInsets: 10.0,
+                          paddingInsets: 10.0,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NewTransactionPage(
+                                  currUser: userid,
+                                  to: null,
+                                  from: userid,
+                                ),
+                              ),
+                            );
+                          },
+                          cardChild: Column(
+                            children: <Widget>[
+                              Text(
+                                'Add Payment',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   )
                 ],

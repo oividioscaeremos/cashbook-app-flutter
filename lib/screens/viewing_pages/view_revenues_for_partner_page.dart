@@ -229,7 +229,7 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                           DialogButton(
                             onPressed: () async {
                               await _firebaseCrud.deleteTransaction(
-                                  revenuesList[index], true);
+                                  revenuesList[index].docID, true);
 
                               setState(() {
                                 revenuesList = buildRevList(snapshot);

@@ -119,12 +119,13 @@ class _ViewUpcomingRevenuesForPartnerState
             backgroundColor: colorPalette.darkGrey,
             body: new ListView.builder(
                 dragStartBehavior: DragStartBehavior.start,
-                itemCount: snapshot.data.documents.length,
+                itemCount: snapshot.data.documents.length - 1,
                 itemBuilder: (BuildContext context, int index) {
                   List<TransactionApp> revenuesList =
                       new List<TransactionApp>();
 
                   revenuesList = buildRevenueList(snapshot);
+                  print('revlistleng ${revenuesList.length}');
 
                   return addNewRevenueWidget(
                       revenuesList, revenuesList[index], index, () {
@@ -209,7 +210,7 @@ class _ViewUpcomingRevenuesForPartnerState
                             DialogButton(
                               onPressed: () async {
                                 await _firebaseCrud.deleteTransaction(
-                                    revenuesList[index], true);
+                                    revenuesList[index].docID, true);
                                 setState(() {
                                   revenuesList = buildRevenueList(snapshot);
                                 });

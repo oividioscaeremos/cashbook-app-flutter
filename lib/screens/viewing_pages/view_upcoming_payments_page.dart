@@ -111,7 +111,7 @@ class _ViewUpcomingPaymentsForPartnerState
             ),
             backgroundColor: colorPalette.darkGrey,
             body: new ListView.builder(
-                itemCount: snapshot.data.documents.length,
+                itemCount: snapshot.data.documents.length - 1,
                 itemBuilder: (BuildContext context, int index) {
                   List<TransactionApp> paymentsList =
                       new List<TransactionApp>();
@@ -201,7 +201,7 @@ class _ViewUpcomingPaymentsForPartnerState
                           DialogButton(
                             onPressed: () async {
                               await _firebaseCrud.deleteTransaction(
-                                  paymentsList[index], false);
+                                  paymentsList[index].docID, false);
 
                               setState(() {
                                 paymentsList = buildPaymentList(snapshot);

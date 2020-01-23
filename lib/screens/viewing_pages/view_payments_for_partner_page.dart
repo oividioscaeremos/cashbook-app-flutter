@@ -227,7 +227,7 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
                               onPressed: () async {
                                 await _firebaseCrud
                                     .deleteTransaction(
-                                        paymentsList[index], false)
+                                        paymentsList[index].docID, false)
                                     .then((val) {
                                   print('it is officially  here 0!');
                                   setState(() {

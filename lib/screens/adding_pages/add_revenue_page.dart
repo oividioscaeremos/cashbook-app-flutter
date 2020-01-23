@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-String globalFrom, globalTo;
+String globalFrom, globalTo, fromValue = '', toValue = '';
 String currUserID;
 List<DropdownMenuItem<String>> ourCompItem =
     new List<DropdownMenuItem<String>>();
@@ -380,6 +380,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                     );
                   } else if (globalFrom != null) {
                     print("here2");
+                    print(currentCompanies.length);
                     return ListView(
                       children: <Widget>[
                         GestureDetector(
@@ -396,8 +397,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                           child: Center(
                             child: Text(
                               globalFrom == currUserID
-                                  ? "New Payment to " + otherCompanyName
-                                  : "New Revenue from " + otherCompanyName,
+                                  ? "New Payment"
+                                  : "New Revenue",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24.0,
@@ -418,39 +419,115 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  DropdownButton(
-                                    items: globalFrom == currUserID
-                                        ? ourCompItem
-                                        : currentCompanies.map((c) {
-                                            return DropdownMenuItem<String>(
-                                              value: c.uid,
-                                              child: Text(c.companyName),
-                                            );
-                                          }).toList(),
-                                    onChanged: (newValue) {
-                                      globalFrom = newValue;
-                                    },
-                                    hint: Text('Select Company'),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: colorPalette.white,
+                                      border: Border.all(
+                                        width: 2.0,
+                                        color: colorPalette.orange,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DropdownButton(
+                                        hint: globalFrom == currUserID
+                                            ? Text('From : Our Company')
+                                            : Text('From : $otherCompanyName'),
+                                        items: globalTo == currUserID
+                                            ? ourCompItem
+                                            : theirCompItem,
+                                        onChanged: (newVal) {
+                                          setState(() {
+                                            selectedItemTo = newVal;
+                                          });
+                                        },
+                                        value: selectedItemTo,
+                                        iconSize: 35.0,
+                                        isExpanded: true,
+                                      ),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 10.0,
                                   ),
-                                  DropdownButton(
-                                    items: globalFrom == currUserID
-                                        ? ourCompItem
-                                        : currentCompanies.map((c) {
-                                            return DropdownMenuItem<String>(
-                                              value: c.uid,
-                                              child: Text(c.companyName),
-                                            );
-                                          }).toList(),
-                                    onChanged: (newValue) {
-                                      globalFrom = newValue;
-                                    },
-                                    hint: Text('Select Company'),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: colorPalette.white,
+                                      border: Border.all(
+                                        width: 2.0,
+                                        color: colorPalette.orange,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DropdownButton(
+                                        isExpanded: true,
+                                        items: globalFrom != currUserID
+                                            ? ourCompItem
+                                            : currentCompanies.map((c) {
+                                                return DropdownMenuItem<String>(
+                                                  value: c.uid,
+                                                  child: Text(c.companyName),
+                                                );
+                                              }).toList(),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            selectedItemTo = newValue;
+                                          });
+                                        },
+                                        value: selectedItemTo,
+                                        hint: Text('Select Company'),
+                                      ),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 10.0,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 0.0,
+                                    ),
+                                    child: Material(
+                                      elevation: 5.0,
+                                      color: colorPalette.lighterDarkBlue,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: MaterialButton(
+                                        minWidth: double.maxFinite,
+                                        onPressed: () {
+                                          showCalender();
+                                        },
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.calendar_today,
+                                              color: colorPalette.white,
+                                            ),
+                                            SizedBox(
+                                              width: 20.0,
+                                            ),
+                                            Text(
+                                              "Date : " + transactionDate,
+                                              style: TextStyle(
+                                                color: colorPalette.white,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 15.0,
+                                            ),
+                                            Text(
+                                              "(day/month/year)",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: colorPalette.white54,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
@@ -459,11 +536,25 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     child: CustomTextBox(
                                       size: borderRadius,
                                       hintText: "Amount",
-                                      borderColor: colorPalette.lighterPink,
+                                      borderColor: colorPalette.darkBlue,
                                       function: amountChanged,
                                       keyboardType: TextInputType.number,
                                       validator: isEmptyValidator,
                                       maxLines: 1,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: edgeInsets,
+                                    ),
+                                    child: CustomTextBox(
+                                      size: borderRadius,
+                                      hintText: "Details",
+                                      borderColor: colorPalette.darkBlue,
+                                      function: detailChanged,
+                                      keyboardType: TextInputType.text,
+                                      validator: isEmptyValidator,
+                                      maxLines: 4,
                                     ),
                                   ),
                                 ],
@@ -483,8 +574,27 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                               onPressed: () {
                                 if (_globalKey.currentState.validate()) {
                                   setState(() {
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
+                                    newTransaction.from = globalFrom;
+                                    newTransaction.to = selectedItemTo;
+                                    if (newTransaction.date
+                                            .compareTo(new DateTime.now()) <=
+                                        0) {
+                                      newTransaction.processed = true;
+                                    } else {
+                                      newTransaction.processed = false;
+                                    }
+
+                                    if (globalFrom == currUserID) {
+                                      print('payment');
+                                      _firebaseCrud.addTransaction(
+                                          newTransaction, false);
+                                    } else {
+                                      print('revenue');
+                                      _firebaseCrud.addTransaction(
+                                          newTransaction, true);
+                                    }
+
+                                    Navigator.pop(context);
                                   });
                                 }
                               },
@@ -541,22 +651,109 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  DropdownButton(
-                                    items: globalFrom == currUserID
-                                        ? ourCompItem
-                                        : currentCompanies.map((c) {
-                                            return DropdownMenuItem<String>(
-                                              value: c.uid,
-                                              child: Text(c.companyName),
-                                            );
-                                          }).toList(),
-                                    onChanged: (newValue) {
-                                      globalFrom = newValue;
-                                    },
-                                    hint: Text('Select Company'),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: colorPalette.white,
+                                      border: Border.all(
+                                        width: 2.0,
+                                        color: colorPalette.orange,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DropdownButton(
+                                        isExpanded: true,
+                                        items: globalFrom == currUserID
+                                            ? ourCompItem
+                                            : currentCompanies.map((c) {
+                                                return DropdownMenuItem<String>(
+                                                  value: c.uid,
+                                                  child: Text(c.companyName),
+                                                );
+                                              }).toList(),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            print(newValue);
+                                            this.selectedItemFrom = newValue;
+                                            //fromValue = newValue;
+                                          });
+                                        },
+                                        value: selectedItemFrom,
+                                        hint: Text('Select Company'),
+                                      ),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 10.0,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: colorPalette.white,
+                                      border: Border.all(
+                                        width: 2.0,
+                                        color: colorPalette.orange,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DropdownButton(
+                                        hint: globalTo == currUserID
+                                            ? Text('To : Our Company')
+                                            : Text('To : ' + otherCompanyName),
+                                        items: globalTo == currUserID
+                                            ? ourCompItem
+                                            : theirCompItem,
+                                        onChanged: (newVal) {},
+                                        iconSize: 35.0,
+                                        isExpanded: true,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                      horizontal: 0.0,
+                                    ),
+                                    child: Material(
+                                      elevation: 5.0,
+                                      color: colorPalette.lighterDarkBlue,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: MaterialButton(
+                                        minWidth: double.maxFinite,
+                                        onPressed: () {
+                                          showCalender();
+                                        },
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.calendar_today,
+                                              color: colorPalette.white,
+                                            ),
+                                            SizedBox(
+                                              width: 20.0,
+                                            ),
+                                            Text(
+                                              "Date : " + transactionDate,
+                                              style: TextStyle(
+                                                color: colorPalette.white,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 15.0,
+                                            ),
+                                            Text(
+                                              "(day/month/year)",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: colorPalette.white54,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
@@ -565,11 +762,25 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     child: CustomTextBox(
                                       size: borderRadius,
                                       hintText: "Amount",
-                                      borderColor: colorPalette.lighterPink,
+                                      borderColor: colorPalette.darkBlue,
                                       function: amountChanged,
-                                      keyboardType: TextInputType.text,
+                                      keyboardType: TextInputType.number,
                                       validator: isEmptyValidator,
                                       maxLines: 1,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: edgeInsets,
+                                    ),
+                                    child: CustomTextBox(
+                                      size: borderRadius,
+                                      hintText: "Details",
+                                      borderColor: colorPalette.darkBlue,
+                                      function: detailChanged,
+                                      keyboardType: TextInputType.text,
+                                      validator: isEmptyValidator,
+                                      maxLines: 4,
                                     ),
                                   ),
                                 ],
@@ -589,15 +800,33 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                               onPressed: () {
                                 if (_globalKey.currentState.validate()) {
                                   setState(() {
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
+                                    // this is a revenue
+                                    newTransaction.from = selectedItemFrom;
+                                    newTransaction.to = globalTo;
+                                    if (newTransaction.date
+                                            .compareTo(new DateTime.now()) <=
+                                        0) {
+                                      newTransaction.processed = true;
+                                    } else {
+                                      newTransaction.processed = false;
+                                    }
+
+                                    if (globalFrom == currUserID) {
+                                      _firebaseCrud.addTransaction(
+                                          newTransaction, false);
+                                    } else {
+                                      _firebaseCrud.addTransaction(
+                                          newTransaction, true);
+                                    }
+
+                                    Navigator.pop(context);
                                   });
                                 }
                               },
                               child: Text(
                                 globalFrom == currUserID
                                     ? "Add Payment"
-                                    : "Add Revenuse",
+                                    : "Add Revenue",
                                 style: TextStyle(
                                   color: colorPalette.white,
                                 ),

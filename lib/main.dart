@@ -4,6 +4,7 @@ import 'package:cash_book_app/screens/regular_pages/welcome_page.dart';
 import 'package:cash_book_app/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(CashBookApp());
 
@@ -18,6 +19,14 @@ class _CashBookAppState extends State<CashBookApp> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarColor: colorPalette.darkBlue,
+        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarColor: colorPalette.darkBlue,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
   }
 
   @override
