@@ -93,181 +93,178 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
       }
     }
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: colorPalette.white,
-        body: Form(
-          key: _globalKey,
-          child: ListView(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(edgeInsets),
-                child: Center(
-                  child: Text(
-                    "Add New Company",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.0,
-                      color: colorPalette.lighterDarkBlue,
-                    ),
+    return Scaffold(
+      backgroundColor: colorPalette.white,
+      body: Form(
+        key: _globalKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(edgeInsets),
+              child: Center(
+                child: Text(
+                  "Add New Company",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                    color: colorPalette.lighterDarkBlue,
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: edgeInsets,
-                  right: edgeInsets,
-                  bottom: edgeInsets,
-                ),
-                child: CustomTextBox(
-                  size: borderRadius,
-                  hintText: "Company Name",
-                  borderColor: colorPalette.lighterPink,
-                  function: companyNameChanged,
-                  keyboardType: TextInputType.text,
-                  validator: companyNameValidator,
-                  maxLines: 1,
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: edgeInsets,
+                right: edgeInsets,
+                bottom: edgeInsets,
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: edgeInsets,
-                  right: edgeInsets,
-                  bottom: edgeInsets,
-                ),
-                child: CustomTextBox(
-                  size: borderRadius,
-                  hintText: "Address",
-                  borderColor: colorPalette.lighterPink,
-                  function: companyAddressChanged,
-                  keyboardType: TextInputType.text,
-                  validator: isEmptyValidator,
-                  maxLines: 4,
-                ),
+              child: CustomTextBox(
+                size: borderRadius,
+                hintText: "Company Name",
+                borderColor: colorPalette.lighterPink,
+                function: companyNameChanged,
+                keyboardType: TextInputType.text,
+                validator: companyNameValidator,
+                maxLines: 1,
               ),
-              ReusableCard(
-                color: Colors.orange,
-                onTap: () {},
-                edgeInsets: edgeInsets,
-                paddingInsets: edgeInsets,
-                cardChild: Column(
-                  children: <Widget>[
-                    Text(
-                      'Person One',
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        CustomTextBox(
-                          size: borderRadius,
-                          hintText: "Name and Surname",
-                          borderColor: colorPalette.white,
-                          function: personOneNameChanged,
-                          keyboardType: TextInputType.text,
-                          validator: isEmptyValidator,
-                          maxLines: 1,
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        CustomPhoneTextBox(
-                          size: borderRadius,
-                          hintText: "Phone Number",
-                          borderColor: colorPalette.white,
-                          function: personOnePhoneNumberChanged,
-                          keyboardType: TextInputType.number,
-                          validator: isEmptyValidator,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: edgeInsets,
+                right: edgeInsets,
+                bottom: edgeInsets,
               ),
-              ReusableCard(
-                color: Colors.orange,
-                onTap: () {},
-                edgeInsets: edgeInsets,
-                paddingInsets: edgeInsets,
-                cardChild: Column(
-                  children: <Widget>[
-                    Text(
-                      'Person Two',
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        CustomTextBox(
-                          size: borderRadius,
-                          hintText: "Name and Surname",
-                          borderColor: colorPalette.white,
-                          function: personTwoNameChanged,
-                          keyboardType: TextInputType.text,
-                          validator: isEmptyValidator,
-                          maxLines: 1,
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        CustomPhoneTextBox(
-                          size: borderRadius,
-                          hintText: "Phone Number",
-                          borderColor: colorPalette.white,
-                          function: personTwoPhoneNumberChanged,
-                          keyboardType: TextInputType.number,
-                          validator: isEmptyValidator,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              child: CustomTextBox(
+                size: borderRadius,
+                hintText: "Address",
+                borderColor: colorPalette.lighterPink,
+                function: companyAddressChanged,
+                keyboardType: TextInputType.text,
+                validator: isEmptyValidator,
+                maxLines: 4,
               ),
-              Padding(
-                padding:
-                    EdgeInsets.symmetric(vertical: 10.0, horizontal: 100.0),
-                child: Material(
-                  elevation: 5.0,
-                  color: colorPalette.lighterDarkBlue,
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: MaterialButton(
-                    minWidth: double.maxFinite,
-                    onPressed: () {
-                      if (_globalKey.currentState.validate()) {
-                        newCompany.personOne = newPerson1;
-                        newCompany.personTwo = newPerson2;
-                        _firebaseCrud.createCompany(newCompany);
-
-                        setState(() {
-                          Navigator.pop(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      PartnersComplete(userId)));
-                        });
-                      }
-                    },
-                    child: Text(
-                      "Create Company",
-                      style: TextStyle(
-                        color: colorPalette.white,
+            ),
+            ReusableCard(
+              color: Colors.orange,
+              onTap: () {},
+              edgeInsets: edgeInsets,
+              paddingInsets: edgeInsets,
+              cardChild: Column(
+                children: <Widget>[
+                  Text(
+                    'Person One',
+                    style:
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CustomTextBox(
+                        size: borderRadius,
+                        hintText: "Name and Surname",
+                        borderColor: colorPalette.white,
+                        function: personOneNameChanged,
+                        keyboardType: TextInputType.text,
+                        validator: isEmptyValidator,
+                        maxLines: 1,
                       ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      CustomPhoneTextBox(
+                        size: borderRadius,
+                        hintText: "Phone Number",
+                        borderColor: colorPalette.white,
+                        function: personOnePhoneNumberChanged,
+                        keyboardType: TextInputType.number,
+                        validator: isEmptyValidator,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            ReusableCard(
+              color: Colors.orange,
+              onTap: () {},
+              edgeInsets: edgeInsets,
+              paddingInsets: edgeInsets,
+              cardChild: Column(
+                children: <Widget>[
+                  Text(
+                    'Person Two',
+                    style:
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CustomTextBox(
+                        size: borderRadius,
+                        hintText: "Name and Surname",
+                        borderColor: colorPalette.white,
+                        function: personTwoNameChanged,
+                        keyboardType: TextInputType.text,
+                        validator: isEmptyValidator,
+                        maxLines: 1,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      CustomPhoneTextBox(
+                        size: borderRadius,
+                        hintText: "Phone Number",
+                        borderColor: colorPalette.white,
+                        function: personTwoPhoneNumberChanged,
+                        keyboardType: TextInputType.number,
+                        validator: isEmptyValidator,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 100.0),
+              child: Material(
+                elevation: 5.0,
+                color: colorPalette.lighterDarkBlue,
+                borderRadius: BorderRadius.circular(10.0),
+                child: MaterialButton(
+                  minWidth: double.maxFinite,
+                  onPressed: () {
+                    if (_globalKey.currentState.validate()) {
+                      newCompany.personOne = newPerson1;
+                      newCompany.personTwo = newPerson2;
+                      _firebaseCrud.createCompany(newCompany);
+
+                      setState(() {
+                        Navigator.pop(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PartnersComplete(userId)));
+                      });
+                    }
+                  },
+                  child: Text(
+                    "Create Company",
+                    style: TextStyle(
+                      color: colorPalette.white,
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

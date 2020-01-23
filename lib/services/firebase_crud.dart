@@ -58,8 +58,8 @@ class FirebaseCrud {
     Firestore.instance.runTransaction((Transaction transaction) async {
       await Firestore.instance.collection('companies').add({
         'belongsTo': currentUser.uid,
-        'currentPaymentBalance': 0,
-        'currentRevenueBalance': 0,
+        'currentPaymentBalance': 0.0,
+        'currentRevenueBalance': 0.0,
         'payments': [],
         'revenues': [],
         'properties': {

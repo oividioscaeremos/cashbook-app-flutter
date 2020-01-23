@@ -125,101 +125,99 @@ class _WelcomePageState extends State<WelcomePage> {
               },
             );
           } else {
-            return SafeArea(
-              child: Scaffold(
-                backgroundColor: colorPalette.white,
-                body: Form(
-                  key: _globalKey,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0),
-                          child: SizedBox(
-                            height: 150,
-                            child: Image.asset(
-                              "lib/assets/images/logo-with-name.png",
-                            ),
+            return Scaffold(
+              backgroundColor: colorPalette.white,
+              body: Form(
+                key: _globalKey,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        child: SizedBox(
+                          height: 150,
+                          child: Image.asset(
+                            "lib/assets/images/logo-with-name.png",
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 10.0),
-                          child: CustomTextBox(
-                            size: 8.0,
-                            hintText: "E-Mail",
-                            borderColor: colorPalette.logoLightBlue,
-                            function: onChangeFunction,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: validateEmail,
-                            maxLines: 1,
-                          ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        child: CustomTextBox(
+                          size: 8.0,
+                          hintText: "E-Mail",
+                          borderColor: colorPalette.logoLightBlue,
+                          function: onChangeFunction,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: validateEmail,
+                          maxLines: 1,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 10.0),
-                          child: CustomTextBox(
-                            size: 8.0,
-                            hintText: "Password",
-                            borderColor: colorPalette.logoLightBlue,
-                            function: onChangeFunctionTwo,
-                            keyboardType: TextInputType.text,
-                            validator: validatePassword,
-                            maxLines: 1,
-                          ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        child: CustomTextBox(
+                          size: 8.0,
+                          hintText: "Password",
+                          borderColor: colorPalette.logoLightBlue,
+                          function: onChangeFunctionTwo,
+                          keyboardType: TextInputType.text,
+                          validator: validatePassword,
+                          maxLines: 1,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left: 10.0, top: 10.0, bottom: 10.0),
-                              child: RaisedButton(
-                                elevation: 5.0,
-                                color: colorPalette.lighterPink,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                onPressed: () {
-                                  signIn();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(
-                                    "Log In",
-                                    style: TextStyle(
-                                      color: colorPalette.white,
-                                    ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 10.0, top: 10.0, bottom: 10.0),
+                            child: RaisedButton(
+                              elevation: 5.0,
+                              color: colorPalette.lighterPink,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              onPressed: () {
+                                signIn();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  "Log In",
+                                  style: TextStyle(
+                                    color: colorPalette.white,
                                   ),
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text("or"),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  Navigator.pushNamed(
-                                      context, RegistrationPage.id);
-                                });
-                              },
-                              child: Text(
-                                "Register",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: colorPalette.logoLightBlue,
-                                ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text("or"),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                Navigator.pushNamed(
+                                    context, RegistrationPage.id);
+                              });
+                            },
+                            child: Text(
+                              "Register",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: colorPalette.logoLightBlue,
                               ),
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ),

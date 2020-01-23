@@ -87,6 +87,7 @@ class _PartnersCompleteState extends State<PartnersComplete> {
           List<Company> currentCompanies = new List<Company>();
 
           snapshot.data.documents.forEach((f) {
+            print("data is ${f.data['currentPaymentBalance'].toString()}");
             Company comp = new Company(
               uid: f.reference.documentID,
               companyName: f.data['properties']['companyName'],

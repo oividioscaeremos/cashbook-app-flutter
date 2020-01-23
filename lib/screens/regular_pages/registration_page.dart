@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+import '../../complete_pages/loadingScreen.dart';
+
 class RegistrationPage extends StatefulWidget {
   static String id = 'registration_page';
 
@@ -99,134 +101,132 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Container(
       child: SingleChildScrollView(
-        child: SafeArea(
-          child: Material(
-            child: Center(
-              child: Form(
-                key: _globalKey,
-                child: Container(
-                  color: colorPalette.white,
-                  constraints: BoxConstraints.expand(
-                      height: MediaQuery.of(context).size.height),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(edgeInsets),
-                        child: Center(
+        child: Material(
+          child: Center(
+            child: Form(
+              key: _globalKey,
+              child: Container(
+                color: colorPalette.white,
+                constraints: BoxConstraints.expand(
+                    height: MediaQuery.of(context).size.height),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(edgeInsets),
+                      child: Center(
+                        child: Text(
+                          "SIGN UP",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30.0,
+                              color: colorPalette.lighterDarkBlue),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: edgeInsets,
+                        right: edgeInsets,
+                        bottom: edgeInsets,
+                      ),
+                      child: CustomTextBox(
+                        size: borderRadius,
+                        hintText: "Company Name",
+                        borderColor: colorPalette.lighterPink,
+                        function: onChangedCN,
+                        keyboardType: TextInputType.text,
+                        validator: isEmpty,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: edgeInsets,
+                        right: edgeInsets,
+                        bottom: edgeInsets,
+                      ),
+                      child: CustomTextBox(
+                        size: borderRadius,
+                        hintText: "E-Mail",
+                        borderColor: colorPalette.lighterPink,
+                        function: onChangedEM,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: validatorEmail,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: edgeInsets,
+                        right: edgeInsets,
+                        bottom: edgeInsets,
+                      ),
+                      child: CustomTextBox(
+                        size: borderRadius,
+                        hintText: "Name and Surname",
+                        borderColor: colorPalette.lighterPink,
+                        function: onChangedNS,
+                        keyboardType: TextInputType.text,
+                        validator: isEmpty,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: edgeInsets,
+                        right: edgeInsets,
+                        bottom: edgeInsets,
+                      ),
+                      child: CustomTextBox(
+                        size: borderRadius,
+                        hintText: "Password",
+                        borderColor: colorPalette.lighterPink,
+                        function: onChangedPW,
+                        keyboardType: TextInputType.text,
+                        validator: validatorPassword,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: edgeInsets,
+                        right: edgeInsets,
+                        bottom: edgeInsets,
+                      ),
+                      child: CustomTextBox(
+                        size: borderRadius,
+                        hintText: "Confirm Password",
+                        borderColor: colorPalette.lighterPink,
+                        function: onChangedCPW,
+                        keyboardType: TextInputType.text,
+                        validator: validatorCPassword,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 100.0),
+                      child: Material(
+                        elevation: 5.0,
+                        color: colorPalette.lighterDarkBlue,
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: MaterialButton(
+                          minWidth: double.maxFinite,
+                          onPressed: () {
+                            signUp();
+                          },
                           child: Text(
-                            "SIGN UP",
+                            "Sign Up",
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30.0,
-                                color: colorPalette.lighterDarkBlue),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: edgeInsets,
-                          right: edgeInsets,
-                          bottom: edgeInsets,
-                        ),
-                        child: CustomTextBox(
-                          size: borderRadius,
-                          hintText: "Company Name",
-                          borderColor: colorPalette.lighterPink,
-                          function: onChangedCN,
-                          keyboardType: TextInputType.text,
-                          validator: isEmpty,
-                          maxLines: 1,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: edgeInsets,
-                          right: edgeInsets,
-                          bottom: edgeInsets,
-                        ),
-                        child: CustomTextBox(
-                          size: borderRadius,
-                          hintText: "E-Mail",
-                          borderColor: colorPalette.lighterPink,
-                          function: onChangedEM,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: validatorEmail,
-                          maxLines: 1,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: edgeInsets,
-                          right: edgeInsets,
-                          bottom: edgeInsets,
-                        ),
-                        child: CustomTextBox(
-                          size: borderRadius,
-                          hintText: "Name and Surname",
-                          borderColor: colorPalette.lighterPink,
-                          function: onChangedNS,
-                          keyboardType: TextInputType.text,
-                          validator: isEmpty,
-                          maxLines: 1,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: edgeInsets,
-                          right: edgeInsets,
-                          bottom: edgeInsets,
-                        ),
-                        child: CustomTextBox(
-                          size: borderRadius,
-                          hintText: "Password",
-                          borderColor: colorPalette.lighterPink,
-                          function: onChangedPW,
-                          keyboardType: TextInputType.text,
-                          validator: validatorPassword,
-                          maxLines: 1,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: edgeInsets,
-                          right: edgeInsets,
-                          bottom: edgeInsets,
-                        ),
-                        child: CustomTextBox(
-                          size: borderRadius,
-                          hintText: "Confirm Password",
-                          borderColor: colorPalette.lighterPink,
-                          function: onChangedCPW,
-                          keyboardType: TextInputType.text,
-                          validator: validatorCPassword,
-                          maxLines: 1,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 100.0),
-                        child: Material(
-                          elevation: 5.0,
-                          color: colorPalette.lighterDarkBlue,
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: MaterialButton(
-                            minWidth: double.maxFinite,
-                            onPressed: () {
-                              signUp();
-                            },
-                            child: Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                color: colorPalette.white,
-                              ),
+                              color: colorPalette.white,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -239,6 +239,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void signUp() {
     final formState = _globalKey.currentState;
     if (formState.validate()) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoadingScreen(),
+        ),
+      );
       AuthService authService = new AuthService();
       var returned = authService.createUser(
           _eMail, _password, _companyName, _nameAndSurname);
@@ -267,6 +273,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ],
           ).show();
         } else {
+          Navigator.pop(context);
           Navigator.pop(context);
         }
       });

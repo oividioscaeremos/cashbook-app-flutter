@@ -8,6 +8,8 @@ import 'package:cash_book_app/styles/home_page_styles.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../components/reusable_card.dart';
+
 String userid = "";
 double _currentCashBalance = 0.0;
 
@@ -150,7 +152,15 @@ class _HomeCompleteState extends State<HomeComplete> {
                                 ),
                               );
                             } else {
-                              return CircularProgressIndicator();
+                              return ReusableCard(
+                                onTap: () {},
+                                color: colorPalette.lighterPink,
+                                cardChild: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                edgeInsets: 10.0,
+                                paddingInsets: 10.0,
+                              );
                             }
                           },
                         ),
@@ -220,7 +230,15 @@ class _HomeCompleteState extends State<HomeComplete> {
                                 ),
                               );
                             } else {
-                              return CircularProgressIndicator();
+                              return ReusableCard(
+                                onTap: () {},
+                                color: colorPalette.lighterPink,
+                                cardChild: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                edgeInsets: 10.0,
+                                paddingInsets: 10.0,
+                              );
                             }
                           },
                         ),
