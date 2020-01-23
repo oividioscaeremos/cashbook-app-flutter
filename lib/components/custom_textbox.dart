@@ -26,10 +26,9 @@ class CustomTextBox extends StatelessWidget {
         function(input);
       },
       maxLines: maxLines,
-      obscureText:
-          this.hintText == "Password" || this.hintText == "Confirm Password"
-              ? true
-              : false,
+      obscureText: this.hintText == "Şifre" || this.hintText == "Şifre Tekrar"
+          ? true
+          : false,
       keyboardType: this.keyboardType,
       decoration: InputDecoration(
         labelText: this.hintText,
@@ -48,7 +47,6 @@ class CustomTextBox extends StatelessWidget {
         ),
       ),
       validator: (input) {
-        print('validator:' + input);
         return validator(input);
       },
     );

@@ -208,7 +208,7 @@ class SinglePartner extends StatelessWidget {
             child: TappableContainer(
               companyId: company.uid,
               colors: kColorArrayPay,
-              buttonText: 'Get Report for ' + company.companyName,
+              buttonText: '${company.companyName} için Rapor Al',
               textColor: colorPalette.white,
               func: generatePDF,
             ),

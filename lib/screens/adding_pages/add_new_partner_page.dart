@@ -57,8 +57,6 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
     }
 
     void personOneNameChanged(String input) {
-      print('personOneeeee');
-      print(newPerson1.nameAndSurname);
       newPerson1.nameAndSurname = input;
     }
 
@@ -71,7 +69,6 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
     }
 
     void personTwoPhoneNumberChanged(String input) {
-      print('changed=' + input);
       newPerson2.phoneNumber = input;
     }
 
@@ -81,24 +78,24 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
 
     String companyNameValidator(String input) {
       if (input.isEmpty) {
-        return "Company Name cannot be empty.";
+        return "Şirket adı boş bırakılamaz.";
       } else if (input.length < 3) {
-        return "Company name should at least be 3 characters.";
+        return "Şirket adı 3 karakterden kısa olamaz.";
       }
     }
 
     String isEmptyValidator(String input) {
       print(input);
       if (input.isEmpty) {
-        return "This area cannot be empty.";
+        return "Bu alan boş bırakılamaz.";
       }
     }
 
     String phoneNumberValidator(String input) {
       if (input.isEmpty) {
-        return 'Phone number cannot be empty.';
+        return 'Telefon numarası boş bırakılamaz.';
       } else if (input.length != 19) {
-        return 'Please enter a valid phone number.';
+        return 'Geçerli bir telefon numarası giriniz.';
       }
     }
 
@@ -112,7 +109,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
               padding: const EdgeInsets.all(edgeInsets),
               child: Center(
                 child: Text(
-                  "Add New Company",
+                  "Yeni Şirket Ekle",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24.0,
@@ -129,7 +126,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
               ),
               child: CustomTextBox(
                 size: borderRadius,
-                hintText: "Company Name",
+                hintText: "Şirket Adı",
                 borderColor: colorPalette.lighterPink,
                 function: companyNameChanged,
                 keyboardType: TextInputType.text,
@@ -145,7 +142,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
               ),
               child: CustomTextBox(
                 size: borderRadius,
-                hintText: "Address",
+                hintText: "Adres",
                 borderColor: colorPalette.lighterPink,
                 function: companyAddressChanged,
                 keyboardType: TextInputType.text,
@@ -161,7 +158,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
               cardChild: Column(
                 children: <Widget>[
                   Text(
-                    'Person One',
+                    'Kişi 1',
                     style: kAddPartnerPersonNameTextStyle,
                   ),
                   SizedBox(
@@ -173,7 +170,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                     children: <Widget>[
                       CustomTextBox(
                         size: borderRadius,
-                        hintText: "Name and Surname",
+                        hintText: "İsim Soyisim",
                         borderColor: colorPalette.white,
                         function: personOneNameChanged,
                         keyboardType: TextInputType.text,
@@ -185,7 +182,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                       ),
                       CustomPhoneTextBox(
                         size: borderRadius,
-                        hintText: "Phone Number",
+                        hintText: "Telefon Numarası",
                         borderColor: colorPalette.white,
                         function: personOnePhoneNumberChanged,
                         keyboardType: TextInputType.number,
@@ -204,7 +201,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
               cardChild: Column(
                 children: <Widget>[
                   Text(
-                    'Person Two',
+                    'Kişi 2',
                     style: kAddPartnerPersonNameTextStyle,
                   ),
                   SizedBox(
@@ -216,7 +213,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                     children: <Widget>[
                       CustomTextBox(
                         size: borderRadius,
-                        hintText: "Name and Surname",
+                        hintText: "İsim Soyisim",
                         borderColor: colorPalette.white,
                         function: personTwoNameChanged,
                         keyboardType: TextInputType.text,
@@ -228,7 +225,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                       ),
                       CustomPhoneTextBox(
                         size: borderRadius,
-                        hintText: "Phone Number",
+                        hintText: "Telefon Numarası",
                         borderColor: colorPalette.white,
                         function: personTwoPhoneNumberChanged,
                         keyboardType: TextInputType.number,
@@ -263,7 +260,7 @@ class _NewPartnerPageState extends State<NewPartnerPage> {
                     }
                   },
                   child: Text(
-                    "Create Company",
+                    "Şirketi Oluştur",
                     style: TextStyle(
                       color: colorPalette.white,
                     ),

@@ -89,7 +89,7 @@ class _HomeCompleteState extends State<HomeComplete> {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: PreferredSize(
-              child: CustomAppBar("Home", Icons.refresh, () {}),
+              child: CustomAppBar("Ana Sayfa", Icons.refresh, () {}),
               preferredSize: new Size(
                 MediaQuery.of(context).size.width,
                 60.0,
@@ -100,7 +100,6 @@ class _HomeCompleteState extends State<HomeComplete> {
               color: colorPalette.darkGrey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   ReusableCard(
                     color: colorPalette.darkerPink,
@@ -112,7 +111,7 @@ class _HomeCompleteState extends State<HomeComplete> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: Text(
-                            "Current Cash Balance:",
+                            "Mevcut Nakit Bakiyeniz:",
                             style: h_c_CurrentBalanceTextStyle,
                           ),
                         ),
@@ -173,7 +172,7 @@ class _HomeCompleteState extends State<HomeComplete> {
                                   cardChild: Column(
                                     children: <Widget>[
                                       Text(
-                                        'Upcoming\nRevenues:',
+                                        'Yaklaşan\nGelirler:',
                                         style: kUpcomingRevTextStyle,
                                       ),
                                       Text(
@@ -184,8 +183,8 @@ class _HomeCompleteState extends State<HomeComplete> {
                                           color: colorPalette.darkerPink,
                                         ),
                                       ),
-                                      Text('$expectedRev TL in total.'),
-                                      Text('($dueRev are due.)'),
+                                      Text('Toplam $expectedRev TL.'),
+                                      Text('($dueRev adetin günü gelmiş.)'),
                                     ],
                                   ),
                                 ),
@@ -241,7 +240,7 @@ class _HomeCompleteState extends State<HomeComplete> {
                                         CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Text(
-                                        'Upcoming\nPayments:',
+                                        'Yaklaşan\nÖdemeler:',
                                         style: kUpcomingRevTextStyle,
                                       ),
                                       Text(
@@ -252,8 +251,8 @@ class _HomeCompleteState extends State<HomeComplete> {
                                           color: colorPalette.darkerPink,
                                         ),
                                       ),
-                                      Text('$expectedPay TL in total.'),
-                                      Text('($duePay are due.)'),
+                                      Text('Toplam $expectedPay TL.'),
+                                      Text('($duePay adetin günü gelmiş.)'),
                                     ],
                                   ),
                                 ),
@@ -301,7 +300,7 @@ class _HomeCompleteState extends State<HomeComplete> {
                           cardChild: Column(
                             children: <Widget>[
                               Text(
-                                'Add Revenue',
+                                'Gelir Ekle',
                                 style: kUpcomingRevTextStyle,
                               ),
                             ],
@@ -328,7 +327,7 @@ class _HomeCompleteState extends State<HomeComplete> {
                           cardChild: Column(
                             children: <Widget>[
                               Text(
-                                'Add Payment',
+                                'Gider Ekle',
                                 style: kUpcomingRevTextStyle,
                               ),
                             ],
@@ -344,7 +343,7 @@ class _HomeCompleteState extends State<HomeComplete> {
         } else {
           return Scaffold(
             appBar: PreferredSize(
-              child: CustomAppBar("Home", Icons.add_circle, () {}),
+              child: CustomAppBar("Ana Sayfa", Icons.add_circle, () {}),
               preferredSize: new Size(
                 MediaQuery.of(context).size.width,
                 kAppBarHeight,

@@ -181,18 +181,18 @@ class SingleTransaction extends StatelessWidget {
                         ),
                         Container(
                           child: Text(
-                            (isRevenue ? "Payment was due " : "Revenue ") +
+                            (isRevenue ? "Ödeme " : "Gelir ") +
                                 (DateTime.now()
                                             .difference(list[index].date)
                                             .inDays
                                             .toString() ==
                                         "0"
-                                    ? " is due today. "
+                                    ? " bugüne kayıtlı. "
                                     : DateTime.now()
                                             .difference(list[index].date)
                                             .inDays
                                             .toString() +
-                                        " days ago."),
+                                        " gün önce eklenmeliydi."),
                           ),
                         )
                       ],
@@ -204,9 +204,10 @@ class SingleTransaction extends StatelessWidget {
                       onTap: () {
                         Alert(
                             context: context,
-                            title: "Confirm",
+                            title: "Onayla",
                             type: AlertType.warning,
-                            desc: "This transaction will be added, continue?",
+                            desc:
+                                "İşlem bakiyenize aktarılacaktır, onaylıyor musunuz?",
                             buttons: [
                               DialogButton(
                                 onPressed: () {
@@ -226,7 +227,7 @@ class SingleTransaction extends StatelessWidget {
                                   );
                                 },
                                 child: Text(
-                                  "YES",
+                                  "Evet",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 ),
@@ -236,7 +237,7 @@ class SingleTransaction extends StatelessWidget {
                                     Navigator.of(context, rootNavigator: true)
                                         .pop(),
                                 child: Text(
-                                  "Cancel",
+                                  "Vazgeç",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 ),

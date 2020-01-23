@@ -133,20 +133,16 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
               child: new ListView.builder(
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (BuildContext context, int index) {
-                    print('tID');
-                    print(snapshot.data.documents[index].documentID);
                     List<TransactionApp> paymentsList =
                         new List<TransactionApp>();
 
-                    print('building a new one!');
-                    print(snapshot.data.documents.length);
                     paymentsList = buildPaymentList(snapshot);
 
                     return addNewPaymentWidget(
                         paymentsList, paymentsList[index], index, () {
                       Alert(
                           context: context,
-                          title: "Payment",
+                          title: "Gider",
                           content: Column(
                             children: <Widget>[
                               TextField(
@@ -172,7 +168,7 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
                                   Navigator.of(context, rootNavigator: true)
                                       .pop(),
                               child: Text(
-                                "Cancel",
+                                "Vazgeç",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
                               ),
@@ -201,7 +197,7 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
                                   );*/
                               },
                               child: Text(
-                                "Change",
+                                "Değiştir",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
                               ),
@@ -210,15 +206,15 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
                     }, () {
                       Alert(
                           context: context,
-                          title: "Warningo",
-                          desc: 'Do you want to delete?',
+                          title: "Dikkat",
+                          desc: 'Silmek istediğinize emin misiniz?',
                           buttons: [
                             DialogButton(
                               onPressed: () =>
                                   Navigator.of(context, rootNavigator: true)
                                       .pop(),
                               child: Text(
-                                "Cancel",
+                                "Vazgeç",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
                               ),
@@ -248,7 +244,7 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
                                   );*/
                               },
                               child: Text(
-                                "Delete",
+                                "Evet",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
                               ),
@@ -276,7 +272,7 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
               automaticallyImplyLeading: false,
               centerTitle: true,
               title: Text(
-                "Payments",
+                "Giderler",
               ),
               actions: <Widget>[
                 IconButton(

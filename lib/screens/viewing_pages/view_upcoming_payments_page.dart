@@ -3,6 +3,7 @@ import 'package:cash_book_app/components/singleTransactionView.dart';
 import 'package:cash_book_app/screens/adding_pages/add_revenue_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -108,7 +109,7 @@ class _ViewUpcomingPaymentsForPartnerState
                 automaticallyImplyLeading: false,
                 centerTitle: true,
                 title: Text(
-                  "Upcoming Payments",
+                  "Yaklaşan Ödemeler",
                 ),
               ),
             ),
@@ -120,7 +121,7 @@ class _ViewUpcomingPaymentsForPartnerState
                       paymentsList, paymentsList[index], index, () {
                     Alert(
                         context: context,
-                        title: "Payment",
+                        title: "Gider",
                         content: Column(
                           children: <Widget>[
                             TextField(
@@ -146,9 +147,8 @@ class _ViewUpcomingPaymentsForPartnerState
                                 Navigator.of(context, rootNavigator: true)
                                     .pop(),
                             child: Text(
-                              "Cancel",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              "Vazgeç",
+                              style: kRegistrationStyle,
                             ),
                           ),
                           DialogButton(
@@ -174,26 +174,24 @@ class _ViewUpcomingPaymentsForPartnerState
                                 );*/
                             },
                             child: Text(
-                              "Change",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              "Değiştir",
+                              style: kRegistrationStyle,
                             ),
                           )
                         ]).show();
                   }, () {
                     Alert(
                         context: context,
-                        title: "Warningo",
-                        desc: 'Do you want to delete?',
+                        title: "Dikkat",
+                        desc: 'Silmek istediğinize emin misiniz?',
                         buttons: [
                           DialogButton(
                             onPressed: () =>
                                 Navigator.of(context, rootNavigator: true)
                                     .pop(),
                             child: Text(
-                              "Cancel",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              "Vazgeç",
+                              style: kRegistrationStyle,
                             ),
                           ),
                           DialogButton(
@@ -208,9 +206,8 @@ class _ViewUpcomingPaymentsForPartnerState
                               Navigator.of(context, rootNavigator: true).pop();
                             },
                             child: Text(
-                              "Delete",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              "Evet",
+                              style: kRegistrationStyle,
                             ),
                           )
                         ]).show();
@@ -235,7 +232,7 @@ class _ViewUpcomingPaymentsForPartnerState
               automaticallyImplyLeading: false,
               centerTitle: true,
               title: Text(
-                "Payments",
+                "Yaklaşan Ödemeler",
               ),
             ),
           ),

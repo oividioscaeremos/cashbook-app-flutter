@@ -121,7 +121,7 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                 automaticallyImplyLeading: false,
                 centerTitle: true,
                 title: Text(
-                  "Revenues",
+                  "Gelirler",
                 ),
                 actions: <Widget>[
                   IconButton(
@@ -142,15 +142,13 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                   List<TransactionApp> revenuesList =
                       new List<TransactionApp>();
 
-                  print('building a new one!');
-                  print(snapshot.data.documents.length);
                   revenuesList = buildRevList(snapshot);
 
                   return addNewRevenueWidget(
                       revenuesList, revenuesList[index], index, () {
                     Alert(
                         context: context,
-                        title: "Revenue",
+                        title: "Gelir",
                         content: Column(
                           children: <Widget>[
                             TextField(
@@ -176,7 +174,7 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                                 Navigator.of(context, rootNavigator: true)
                                     .pop(),
                             child: Text(
-                              "Cancel",
+                              "Vazgeç",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -204,7 +202,7 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                                 );*/
                             },
                             child: Text(
-                              "Change",
+                              "Değiştir",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -213,15 +211,15 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                   }, () {
                     Alert(
                         context: context,
-                        title: "Warningo",
-                        desc: 'Do you want to delete?',
+                        title: "Dikkat",
+                        desc: 'Silmek istediğinize emin misiniz?',
                         buttons: [
                           DialogButton(
                             onPressed: () =>
                                 Navigator.of(context, rootNavigator: true)
                                     .pop(),
                             child: Text(
-                              "Cancel",
+                              "Vazgeç",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -238,7 +236,7 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                               Navigator.of(context, rootNavigator: true).pop();
                             },
                             child: Text(
-                              "Delete",
+                              "Evet",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -265,7 +263,7 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
               automaticallyImplyLeading: false,
               centerTitle: true,
               title: Text(
-                "Revenues",
+                "Gelirler",
               ),
               actions: <Widget>[
                 IconButton(

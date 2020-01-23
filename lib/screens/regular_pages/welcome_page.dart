@@ -115,119 +115,119 @@ class _WelcomePageState extends State<WelcomePage> {
     }
 
     return FutureBuilder<FirebaseUser>(
-        future: authService.getCurrentUser(),
-        builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-          if (snapshot.hasData) {
-            return MaterialApp(
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-              ),
-              initialRoute: HomePage.id,
-              routes: {
-                HomePage.id: (context) => HomePage(snapshot.data.uid),
-                WelcomePage.id: (context) => WelcomePage(),
-                RegistrationPage.id: (context) => RegistrationPage()
-              },
-            );
-          } else {
-            return Scaffold(
-              backgroundColor: colorPalette.white,
-              body: Form(
-                key: _globalKey,
-                child: Padding(
-                  padding: kHorizontalTwenty,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: kHorizontalTwenty,
-                        child: SizedBox(
-                          height: 150,
-                          child: Image.asset(
-                            "lib/assets/images/logo-with-name.png",
-                          ),
+      future: authService.getCurrentUser(),
+      builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+        if (snapshot.hasData) {
+          return MaterialApp(
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            initialRoute: HomePage.id,
+            routes: {
+              HomePage.id: (context) => HomePage(snapshot.data.uid),
+              WelcomePage.id: (context) => WelcomePage(),
+              RegistrationPage.id: (context) => RegistrationPage()
+            },
+          );
+        } else {
+          return Scaffold(
+            backgroundColor: colorPalette.white,
+            body: Form(
+              key: _globalKey,
+              child: Padding(
+                padding: kHorizontalTwenty,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: kHorizontalTwenty,
+                      child: SizedBox(
+                        height: 150,
+                        child: Image.asset(
+                          "lib/assets/images/logo-with-name.png",
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
-                        child: CustomTextBox(
-                          size: 8.0,
-                          hintText: "E-Mail",
-                          borderColor: colorPalette.logoLightBlue,
-                          function: onChangeFunction,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: validateEmail,
-                          maxLines: 1,
-                        ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
+                      child: CustomTextBox(
+                        size: 8.0,
+                        hintText: "E-Mail",
+                        borderColor: colorPalette.logoLightBlue,
+                        function: onChangeFunction,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: validateEmail,
+                        maxLines: 1,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
-                        child: CustomTextBox(
-                          size: 8.0,
-                          hintText: "Password",
-                          borderColor: colorPalette.logoLightBlue,
-                          function: onChangeFunctionTwo,
-                          keyboardType: TextInputType.text,
-                          validator: validatePassword,
-                          maxLines: 1,
-                        ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
+                      child: CustomTextBox(
+                        size: 8.0,
+                        hintText: "Şifre",
+                        borderColor: colorPalette.logoLightBlue,
+                        function: onChangeFunctionTwo,
+                        keyboardType: TextInputType.text,
+                        validator: validatePassword,
+                        maxLines: 1,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: 10.0, top: 10.0, bottom: 10.0),
-                            child: RaisedButton(
-                              elevation: 5.0,
-                              color: colorPalette.lighterPink,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              onPressed: () {
-                                signIn();
-                              },
-                              child: Padding(
-                                padding: tenAllPadding,
-                                child: Text(
-                                  "Log In",
-                                  style: TextStyle(
-                                    color: colorPalette.white,
-                                  ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 10.0, top: 10.0, bottom: 10.0),
+                          child: RaisedButton(
+                            elevation: 5.0,
+                            color: colorPalette.lighterPink,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            onPressed: () {
+                              signIn();
+                            },
+                            child: Padding(
+                              padding: tenAllPadding,
+                              child: Text(
+                                "Giriş Yap",
+                                style: TextStyle(
+                                  color: colorPalette.white,
                                 ),
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: tenAllPadding,
-                            child: Text("or"),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                Navigator.pushNamed(
-                                    context, RegistrationPage.id);
-                              });
-                            },
-                            child: Text(
-                              "Register",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: colorPalette.logoLightBlue,
-                              ),
+                        ),
+                        Padding(
+                          padding: tenAllPadding,
+                          child: Text("veya"),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              Navigator.pushNamed(context, RegistrationPage.id);
+                            });
+                          },
+                          child: Text(
+                            "Kaydol",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: colorPalette.logoLightBlue,
                             ),
                           ),
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
-            );
-          }
-        });
+            ),
+          );
+        }
+      },
+    );
   }
 }

@@ -44,10 +44,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Destination> allDestinations = [
-    new Destination('Home', Icons.home, Colors.white10, HomeComplete(userId)),
     new Destination(
-        'Partners', Icons.business, Colors.white10, PartnersComplete(userId)),
-    new Destination('Profile', Icons.account_balance, Colors.white10,
+        'Ana Sayfa', Icons.home, Colors.white10, HomeComplete(userId)),
+    new Destination(
+        'Ortaklar', Icons.business, Colors.white10, PartnersComplete(userId)),
+    new Destination('Profil', Icons.account_balance, Colors.white10,
         ProfileComplete(userId))
   ];
 

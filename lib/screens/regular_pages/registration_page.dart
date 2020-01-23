@@ -75,26 +75,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(input);
     if (!emailValid) {
-      return "Please enter a valid e-mail address.";
+      return "Geçerli bir mail adresi giriniz.";
     }
   }
 
   String isEmpty(input) {
     if (input.length == 0) {
-      return "This area can't be empty.";
+      return "Bu alan boş bırakılamaz.";
     }
   }
 
   String validatorPassword(input) {
     if (input.length < 6) {
-      return "Password can't be shorter than 6 characters.";
+      return "Şifre 6 karakterden kısa olamaz.";
     }
   }
 
   String validatorCPassword(input) {
     print(input);
     if (input != _password) {
-      return "Password doesn't match.";
+      return "Şifreler uyuşmuyor.";
     }
   }
 
@@ -118,7 +118,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       padding: const EdgeInsets.all(edgeInsets),
                       child: Center(
                         child: Text(
-                          "SIGN UP",
+                          "KAYDOL",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30.0,
@@ -134,7 +134,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       child: CustomTextBox(
                         size: borderRadius,
-                        hintText: "Company Name",
+                        hintText: "Şirketinizin Adı",
                         borderColor: colorPalette.lighterPink,
                         function: onChangedCN,
                         keyboardType: TextInputType.text,
@@ -166,7 +166,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       child: CustomTextBox(
                         size: borderRadius,
-                        hintText: "Name and Surname",
+                        hintText: "Ad Soyad",
                         borderColor: colorPalette.lighterPink,
                         function: onChangedNS,
                         keyboardType: TextInputType.text,
@@ -182,7 +182,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       child: CustomTextBox(
                         size: borderRadius,
-                        hintText: "Password",
+                        hintText: "Şifre",
                         borderColor: colorPalette.lighterPink,
                         function: onChangedPW,
                         keyboardType: TextInputType.text,
@@ -198,7 +198,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       child: CustomTextBox(
                         size: borderRadius,
-                        hintText: "Confirm Password",
+                        hintText: "Şifre Tekrar",
                         borderColor: colorPalette.lighterPink,
                         function: onChangedCPW,
                         keyboardType: TextInputType.text,
@@ -219,7 +219,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             signUp();
                           },
                           child: Text(
-                            "Sign Up",
+                            "Kaydol",
                             style: TextStyle(
                               color: colorPalette.white,
                             ),
@@ -255,12 +255,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
           Alert(
             context: context,
             type: AlertType.warning,
-            title: "ERROR",
-            desc: "This email is in use.",
+            title: "HATA",
+            desc: "Bu mail adresi kullanımdadır.",
             buttons: [
               DialogButton(
                 child: Text(
-                  "OKAY",
+                  "TAMAM",
                   style: kRegistrationStyle,
                 ),
                 onPressed: () {

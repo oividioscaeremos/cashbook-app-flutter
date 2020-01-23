@@ -35,7 +35,6 @@ class _PartnersCompleteState extends State<PartnersComplete> {
   @override
   void initState() {
     super.initState();
-    print("partners init");
   }
 
   void addNewPartner() {
@@ -119,8 +118,8 @@ class _PartnersCompleteState extends State<PartnersComplete> {
           for (var d in ourCompanies) {
             return Scaffold(
               appBar: PreferredSize(
-                child:
-                    CustomAppBar("Partners", Icons.add_circle, addNewPartner),
+                child: CustomAppBar(
+                    "İş Ortaklarınız", Icons.add_circle, addNewPartner),
                 preferredSize: new Size(
                   MediaQuery.of(context).size.width,
                   kAppBarHeight,
@@ -135,14 +134,14 @@ class _PartnersCompleteState extends State<PartnersComplete> {
                         context: context,
                         type: AlertType.warning,
                         closeFunction: () {},
-                        title: "Delete " +
-                            ourCompanies[index].companyName.toUpperCase(),
+                        title:
+                            "${ourCompanies[index].companyName.toUpperCase()} Firmasını Sil",
                         desc:
-                            "This process cannot be taken back, do you want to delete?",
+                            "Bu işlem geri alınamaz, devam etmek istiyor musunuz?",
                         buttons: [
                           DialogButton(
                             child: Text(
-                              "YES",
+                              "Evet",
                               style: kAlertButtonTextStyle,
                             ),
                             onPressed: () async {
@@ -160,7 +159,7 @@ class _PartnersCompleteState extends State<PartnersComplete> {
                           ),
                           DialogButton(
                             child: Text(
-                              "NO",
+                              "Hayır",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -178,7 +177,8 @@ class _PartnersCompleteState extends State<PartnersComplete> {
         }
         return Scaffold(
           appBar: PreferredSize(
-            child: CustomAppBar("Partners", Icons.add_circle, addNewPartner),
+            child: CustomAppBar(
+                "İş Ortaklarınız", Icons.add_circle, addNewPartner),
             preferredSize: new Size(
               MediaQuery.of(context).size.width,
               kAppBarHeight,

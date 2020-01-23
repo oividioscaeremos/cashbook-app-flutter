@@ -269,8 +269,8 @@ class PDFGenerator {
     double futureRevenues = 0.0;
     double futurePayments = 0.0;
 
-    firebaseCrud.getAllTransactionsForUser().then((allTransactions) {
-      Future.delayed(Duration(seconds: 3), () async {
+    await firebaseCrud.getAllTransactionsForUser().then((allTransactions) {
+      Future.delayed(Duration(seconds: 4), () async {
         allTransactions[0].forEach((e) {
           if (!e.processed) {
             futureRevenues += e.amount;
@@ -413,12 +413,12 @@ class PDFGenerator {
 
         final output = await getTemporaryDirectory();
 
-        final file = File("${output.path}/exampleDr.pdf");
+        final file = File("${output.path}/latestoo.pdf");
         await file.writeAsBytes(pdf.save());
         //await Printing.sharePdf(bytes: pdf.save(), filename: 'my-document.pdf');
-        list = pdf.save();
+        //list = pdf.save();
 
-        return list;
+        return await file.readAsBytes();
       });
     });
   }

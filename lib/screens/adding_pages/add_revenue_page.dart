@@ -75,11 +75,11 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
       });
     }
 
-    if (ourCompItem.indexOf(
-            DropdownMenuItem(child: Text('Our Company'), value: currUserID)) !=
+    if (ourCompItem.indexOf(DropdownMenuItem(
+            child: Text('Sizin Şirketiniz'), value: currUserID)) !=
         -1) {
-      ourCompItem.add(
-          new DropdownMenuItem(child: Text('Our Company'), value: currUserID));
+      ourCompItem.add(new DropdownMenuItem(
+          child: Text('Sizin Şirketiniz'), value: currUserID));
     }
 
     void amountChanged(String input) {
@@ -93,7 +93,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
     String isEmptyValidator(String input) {
       print(input);
       if (input.isEmpty) {
-        return "This area cannot be empty.";
+        return "Bu alan boş bırakılamaz.";
       }
     }
 
@@ -109,12 +109,12 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
                   if (ourCompItem.indexOf(DropdownMenuItem(
-                        child: Text("Our Company"),
+                        child: Text("Sizin Şirketiniz"),
                         value: currUserID,
                       )) !=
                       -1) {
                     theirCompItem.add(new DropdownMenuItem(
-                      child: Text("Our Company"),
+                      child: Text("Sizin Şirketiniz"),
                       value: currUserID,
                     ));
                   }
@@ -175,8 +175,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                           child: Center(
                             child: Text(
                               globalFrom == currUserID
-                                  ? "New Payment to " + otherCompanyName
-                                  : "New Revenue from " + otherCompanyName,
+                                  ? "$otherCompanyName Şirketine Yeni Ödeme"
+                                  : "$otherCompanyName Şirketinden Yeni Gelir",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24.0,
@@ -213,9 +213,9 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                             ? ourCompItem
                                             : theirCompItem,
                                         hint: globalFrom == currUserID
-                                            ? Text('From : Our Company')
+                                            ? Text('Kimden : Sizin Şirketiniz')
                                             : Text(
-                                                'From : ' + otherCompanyName),
+                                                'Kimden : ' + otherCompanyName),
                                         onChanged: (newVal) {},
                                         value: selectedItemFrom,
                                         focusColor: Colors.blue,
@@ -240,8 +240,9 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: DropdownButton(
                                         hint: globalTo == currUserID
-                                            ? Text('To : Our Company')
-                                            : Text('To : ' + otherCompanyName),
+                                            ? Text('Kime : Sizin Şirketinize')
+                                            : Text(
+                                                'Kime : ' + otherCompanyName),
                                         items: globalTo == currUserID
                                             ? ourCompItem
                                             : theirCompItem,
@@ -280,7 +281,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                               width: 20.0,
                                             ),
                                             Text(
-                                              "Date : " + transactionDate,
+                                              "Tarih : " + transactionDate,
                                               style: TextStyle(
                                                 color: colorPalette.white,
                                               ),
@@ -289,7 +290,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                               width: 15.0,
                                             ),
                                             Text(
-                                              "(day/month/year)",
+                                              "(gün/ay/yıl)",
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: colorPalette.white54,
@@ -306,7 +307,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     ),
                                     child: CustomTextBox(
                                       size: borderRadius,
-                                      hintText: "Amount",
+                                      hintText: "Tutar",
                                       borderColor: colorPalette.darkBlue,
                                       function: amountChanged,
                                       keyboardType: TextInputType.number,
@@ -320,7 +321,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     ),
                                     child: CustomTextBox(
                                       size: borderRadius,
-                                      hintText: "Details",
+                                      hintText: "Açıklama",
                                       borderColor: colorPalette.darkBlue,
                                       function: detailChanged,
                                       keyboardType: TextInputType.text,
@@ -367,8 +368,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                               },
                               child: Text(
                                 globalFrom == currUserID
-                                    ? "Add Payment"
-                                    : "Add Revenuse",
+                                    ? "Gider Ekle"
+                                    : "Gelir Ekle",
                                 style: TextStyle(
                                   color: colorPalette.white,
                                 ),
@@ -379,8 +380,6 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                       ],
                     );
                   } else if (globalFrom != null) {
-                    print("here2");
-                    print(currentCompanies.length);
                     return ListView(
                       children: <Widget>[
                         GestureDetector(
@@ -397,8 +396,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                           child: Center(
                             child: Text(
                               globalFrom == currUserID
-                                  ? "New Payment"
-                                  : "New Revenue",
+                                  ? "Yeni Gider"
+                                  : "Yeni Gelir",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24.0,
@@ -432,8 +431,10 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: DropdownButton(
                                         hint: globalFrom == currUserID
-                                            ? Text('From : Our Company')
-                                            : Text('From : $otherCompanyName'),
+                                            ? Text(
+                                                'Kimden : Sizin Şirketinizden')
+                                            : Text(
+                                                'Kimden : $otherCompanyName'),
                                         items: globalTo == currUserID
                                             ? ourCompItem
                                             : theirCompItem,
@@ -478,7 +479,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                           });
                                         },
                                         value: selectedItemTo,
-                                        hint: Text('Select Company'),
+                                        hint: Text('İş Ortağı Seçiniz'),
                                       ),
                                     ),
                                   ),
@@ -509,7 +510,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                               width: 20.0,
                                             ),
                                             Text(
-                                              "Date : " + transactionDate,
+                                              "Tarih : " + transactionDate,
                                               style: TextStyle(
                                                 color: colorPalette.white,
                                               ),
@@ -518,7 +519,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                               width: 15.0,
                                             ),
                                             Text(
-                                              "(day/month/year)",
+                                              "(gün/ay/yıl)",
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: colorPalette.white54,
@@ -535,7 +536,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     ),
                                     child: CustomTextBox(
                                       size: borderRadius,
-                                      hintText: "Amount",
+                                      hintText: "Tutar",
                                       borderColor: colorPalette.darkBlue,
                                       function: amountChanged,
                                       keyboardType: TextInputType.number,
@@ -549,7 +550,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     ),
                                     child: CustomTextBox(
                                       size: borderRadius,
-                                      hintText: "Details",
+                                      hintText: "Açıklama",
                                       borderColor: colorPalette.darkBlue,
                                       function: detailChanged,
                                       keyboardType: TextInputType.text,
@@ -600,8 +601,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                               },
                               child: Text(
                                 globalFrom == currUserID
-                                    ? "Add Payment"
-                                    : "Add Revenuse",
+                                    ? "Gider Ekle"
+                                    : "Gelir Ekle",
                                 style: TextStyle(
                                   color: colorPalette.white,
                                 ),
@@ -612,7 +613,6 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                       ],
                     );
                   } else if (globalTo != null) {
-                    print("here3");
                     return ListView(
                       children: <Widget>[
                         GestureDetector(
@@ -629,8 +629,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                           child: Center(
                             child: Text(
                               globalFrom == currUserID
-                                  ? "New Payment"
-                                  : "New Revenue",
+                                  ? "Yeni Gider"
+                                  : "Yeni Gelir",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 24.0,
@@ -680,7 +680,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                           });
                                         },
                                         value: selectedItemFrom,
-                                        hint: Text('Select Company'),
+                                        hint: Text('İş Ortağı Seçiniz'),
                                       ),
                                     ),
                                   ),
@@ -700,8 +700,9 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: DropdownButton(
                                         hint: globalTo == currUserID
-                                            ? Text('To : Our Company')
-                                            : Text('To : ' + otherCompanyName),
+                                            ? Text('Kime : Sizin Şirketinize')
+                                            : Text(
+                                                'Kime : ' + otherCompanyName),
                                         items: globalTo == currUserID
                                             ? ourCompItem
                                             : theirCompItem,
@@ -735,7 +736,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                               width: 20.0,
                                             ),
                                             Text(
-                                              "Date : " + transactionDate,
+                                              "Tarih : " + transactionDate,
                                               style: TextStyle(
                                                 color: colorPalette.white,
                                               ),
@@ -744,7 +745,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                               width: 15.0,
                                             ),
                                             Text(
-                                              "(day/month/year)",
+                                              "(gün/ay/yıl)",
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: colorPalette.white54,
@@ -761,7 +762,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     ),
                                     child: CustomTextBox(
                                       size: borderRadius,
-                                      hintText: "Amount",
+                                      hintText: "Tutar",
                                       borderColor: colorPalette.darkBlue,
                                       function: amountChanged,
                                       keyboardType: TextInputType.number,
@@ -775,7 +776,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                                     ),
                                     child: CustomTextBox(
                                       size: borderRadius,
-                                      hintText: "Details",
+                                      hintText: "Açıklama",
                                       borderColor: colorPalette.darkBlue,
                                       function: detailChanged,
                                       keyboardType: TextInputType.text,
@@ -825,8 +826,8 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                               },
                               child: Text(
                                 globalFrom == currUserID
-                                    ? "Add Payment"
-                                    : "Add Revenue",
+                                    ? "Gider Ekle"
+                                    : "Gelir Ekle",
                                 style: TextStyle(
                                   color: colorPalette.white,
                                 ),

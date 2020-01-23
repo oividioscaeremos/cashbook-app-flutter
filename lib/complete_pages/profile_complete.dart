@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cash_book_app/classes/User.dart';
 import 'package:cash_book_app/complete_pages/loadingScreen.dart';
 import 'package:cash_book_app/components/custom_appBar.dart';
@@ -55,13 +57,13 @@ class _ProfileCompleteState extends State<ProfileComplete> {
     Alert(
       type: AlertType.warning,
       context: context,
-      title: "Change",
-      desc: 'Do you want to sign out?',
+      title: "Oturumu Kapat",
+      desc: 'Oturumu kapatmak istediğinize emin misiniz?',
       buttons: [
         DialogButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           child: Text(
-            "No",
+            "Hayır",
             style: TextStyle(
               color: colorPalette.darkBlue,
               fontSize: fontSize,
@@ -83,7 +85,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
             });
           },
           child: Text(
-            "Yes",
+            "Evet",
             style: TextStyle(
               color: Colors.white,
               fontSize: fontSize,
@@ -96,27 +98,51 @@ class _ProfileCompleteState extends State<ProfileComplete> {
 
   void generatePDF() {
     PDFGenerator pdfGenerator = new PDFGenerator();
-    getTemporaryDirectory().then((output) {
+    getTemporaryDirectory().then((output) async {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => LoadingScreen(),
         ),
       );
-      pdfGenerator.GenerateGeneralPDF().then((byteList) {
-        Future.delayed(Duration(seconds: 4), () {
+
+      await pdfGenerator.GenerateGeneralPDF().then((bytelist) async {
+        Future.delayed(Duration(seconds: 6), () async {
+          final file = File('${output.path}/latestoo.pdf');
+          bytelist = await file.readAsBytes();
           Navigator.pop(context);
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => PDFViewerOfOurs(
-                '${output.path}/exampleDr.pdf',
-                byteList,
+                '${output.path}/latestoo.pdf',
+                bytelist,
               ),
             ),
           );
         });
       });
+
+      /*print('is this it');
+      print(bytelist);
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PDFViewerOfOurs(
+            '${output.path}/exampleDr.pdf',
+            bytelist,
+          ),
+        ),
+      );
+      Future.delayed(Duration(seconds: 5), () {
+        print('is this itt');
+        print(bytelist);
+      });*/
+
+      /*pdfGenerator.GenerateGeneralPDF().then((byteList) {
+
+      });*/
     });
   }
 
@@ -131,7 +157,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: PreferredSize(
-              child: CustomAppBar("Profile", Icons.highlight_off, signOut),
+              child: CustomAppBar("Profil", Icons.highlight_off, signOut),
               preferredSize: new Size(
                 MediaQuery.of(context).size.width,
                 kAppBarHeight,
@@ -155,13 +181,13 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                  'Company Name: ${snapshot.data['properties']['companyName']}',
+                                  'Şirket Adı: ${snapshot.data['properties']['companyName']}',
                                   style: kCompanyNameTextStyle),
                               GestureDetector(
                                 onTap: () {
                                   Alert(
                                       context: context,
-                                      title: "Change",
+                                      title: "Değiştir",
                                       content: Column(
                                         children: <Widget>[
                                           TextField(
@@ -182,7 +208,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                                   rootNavigator: true)
                                               .pop(),
                                           child: Text(
-                                            "Cancel",
+                                            "Vazgeç",
                                             style: TextStyle(
                                               color: colorPalette.darkBlue,
                                               fontSize: fontSize,
@@ -202,7 +228,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                                 .pop();
                                           },
                                           child: Text(
-                                            "Change",
+                                            "Değiştir",
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: fontSize,
@@ -228,14 +254,14 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                'Name and Surname: ${snapshot.data['properties']['nameAndSurname']}',
+                                'İsim Soyisim: ${snapshot.data['properties']['nameAndSurname']}',
                                 style: kProfileNameAndSurnameTextStyle,
                               ),
                               GestureDetector(
                                 onTap: () {
                                   Alert(
                                       context: context,
-                                      title: "Change",
+                                      title: "Değiştir",
                                       content: Column(
                                         children: <Widget>[
                                           TextField(
@@ -256,7 +282,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                                   rootNavigator: true)
                                               .pop(),
                                           child: Text(
-                                            "Cancel",
+                                            "Vazgeç",
                                             style: TextStyle(
                                               color: colorPalette.darkBlue,
                                               fontSize: fontSize,
@@ -276,7 +302,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                                 .pop();
                                           },
                                           child: Text(
-                                            "Change",
+                                            "Değiştir",
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: fontSize,
@@ -321,7 +347,7 @@ class _ProfileCompleteState extends State<ProfileComplete> {
                                       kBoxConstraints, // min sizes for Material buttons
                                   alignment: Alignment.center,
                                   child: Text(
-                                    'Get General Report',
+                                    'PDF Rapor Al',
                                     style: TextStyle(
                                       color: colorPalette.darkerPink,
                                     ),

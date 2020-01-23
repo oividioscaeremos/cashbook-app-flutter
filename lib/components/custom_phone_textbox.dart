@@ -45,7 +45,6 @@ class CustomPhoneTextBox extends StatelessWidget {
         ),
       ),
       validator: (input) {
-        print('validator:' + input);
         return validator(input);
       },
       inputFormatters: [maskFormatter],

@@ -12,6 +12,8 @@ List<int> bytes;
 
 class PDFViewerOfOurs extends StatefulWidget {
   PDFViewerOfOurs(patho, byteso) {
+    print(patho);
+    print(byteso);
     path = patho;
     bytes = byteso;
   }

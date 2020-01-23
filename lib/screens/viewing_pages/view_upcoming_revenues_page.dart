@@ -3,6 +3,7 @@ import 'package:cash_book_app/components/singleTransactionView.dart';
 import 'package:cash_book_app/screens/adding_pages/add_revenue_page.dart';
 import 'package:cash_book_app/services/firebase_crud.dart';
 import 'package:cash_book_app/styles/color_palette.dart';
+import 'package:cash_book_app/styles/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -115,7 +116,7 @@ class _ViewUpcomingRevenuesForPartnerState
                 automaticallyImplyLeading: false,
                 centerTitle: true,
                 title: Text(
-                  "Upcoming Revenues",
+                  "Yaklaşan Gelirler",
                 ),
               ),
             ),
@@ -124,13 +125,11 @@ class _ViewUpcomingRevenuesForPartnerState
                 dragStartBehavior: DragStartBehavior.start,
                 itemCount: revenuesList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  print('revlistleng ${revenuesList.length}');
-
                   return addNewRevenueWidget(
                       revenuesList, revenuesList[index], index, () {
                     Alert(
                         context: context,
-                        title: "Revenue",
+                        title: "Gelir",
                         content: Column(
                           children: <Widget>[
                             TextField(
@@ -156,9 +155,8 @@ class _ViewUpcomingRevenuesForPartnerState
                                 Navigator.of(context, rootNavigator: true)
                                     .pop(),
                             child: Text(
-                              "Cancel",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              "Vazgeç",
+                              style: kRegistrationStyle,
                             ),
                           ),
                           DialogButton(
@@ -183,9 +181,8 @@ class _ViewUpcomingRevenuesForPartnerState
                                 );*/
                             },
                             child: Text(
-                              "Change",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              "Değiştir",
+                              style: kRegistrationStyle,
                             ),
                           )
                         ]).show();
@@ -193,17 +190,16 @@ class _ViewUpcomingRevenuesForPartnerState
                     setState(() {
                       Alert(
                           context: context,
-                          title: "Warning",
-                          desc: 'Do you want to delete?',
+                          title: "Dikkat",
+                          desc: 'Silmek istediğinize emin misiniz?',
                           buttons: [
                             DialogButton(
                               onPressed: () =>
                                   Navigator.of(context, rootNavigator: true)
                                       .pop(),
                               child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
+                                "Vazgeç",
+                                style: kRegistrationStyle,
                               ),
                             ),
                             DialogButton(
@@ -218,9 +214,8 @@ class _ViewUpcomingRevenuesForPartnerState
                                     .pop();
                               },
                               child: Text(
-                                "Delete",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
+                                "Evet",
+                                style: kRegistrationStyle,
                               ),
                             )
                           ]).show();
@@ -246,7 +241,7 @@ class _ViewUpcomingRevenuesForPartnerState
               automaticallyImplyLeading: false,
               centerTitle: true,
               title: Text(
-                "Upcoming Revenues",
+                "Yaklaşan Gelirler",
               ),
             ),
           ),
