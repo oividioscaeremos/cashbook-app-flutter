@@ -13,7 +13,6 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 String userID;
 String partnerID;
 String companyName;
-List<TransactionApp> revenuesList = new List<TransactionApp>();
 
 class ViewRevenuesForPartner extends StatefulWidget {
   ViewRevenuesForPartner(@required String partner_id, String currUserId) {
@@ -49,8 +48,12 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                 )));
   }
 
-  Widget addNewRevenueWidget(TransactionApp company, int index,
-      Function dialogFun, Function deleteFun) {
+  Widget addNewRevenueWidget(
+      List<TransactionApp> revenuesList,
+      TransactionApp company,
+      int index,
+      Function dialogFun,
+      Function deleteFun) {
     return SingleTransaction(
       list: revenuesList,
       index: index,
@@ -68,14 +71,14 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
     _detail = input;
   }
 
-  void buildRevList(AsyncSnapshot<QuerySnapshot> snapshot) {
+  List<TransactionApp> buildRevList(AsyncSnapshot<QuerySnapshot> snapshot) {
     print('called this');
-    revenuesList = new List<TransactionApp>();
+    List<TransactionApp> revenuesList = new List<TransactionApp>();
 
     //List snapShotDoc = snapshot.data.documents;
     snapshot.data.documents.forEach((f) {
       TransactionApp rev = new TransactionApp(
-        docID: f.data["tID"],
+        docID: f.documentID,
         from: f.data["from"],
         to: f.data["to"],
         date: DateTime.fromMillisecondsSinceEpoch(
@@ -91,6 +94,8 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
     });
 
     revenuesList.sort((a, b) => a.date.compareTo(b.date));
+
+    return revenuesList;
   }
 
   @override
@@ -99,93 +104,97 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
       stream: _firebaseCrud.getTransactions(userID, partnerID, true),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
-          buildRevList(snapshot);
-          for (var d in revenuesList) {
-            return Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size(MediaQuery.of(context).size.width, 60),
-                child: AppBar(
-                  leading: IconButton(
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size(MediaQuery.of(context).size.width, 60),
+              child: AppBar(
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: colorPalette.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                backgroundColor: colorPalette.darkBlue,
+                automaticallyImplyLeading: false,
+                centerTitle: true,
+                title: Text(
+                  "Revenues",
+                ),
+                actions: <Widget>[
+                  IconButton(
                     icon: Icon(
-                      Icons.arrow_back,
+                      Icons.add_circle,
                       color: colorPalette.white,
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  backgroundColor: colorPalette.darkBlue,
-                  automaticallyImplyLeading: false,
-                  centerTitle: true,
-                  title: Text(
-                    "Revenues",
-                  ),
-                  actions: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.add_circle,
-                        color: colorPalette.white,
-                      ),
-                      onPressed: addNewRevenue,
-                    )
-                  ],
-                ),
+                    onPressed: addNewRevenue,
+                  )
+                ],
               ),
-              backgroundColor: colorPalette.darkGrey,
-              body: new ListView.builder(
-                  dragStartBehavior: DragStartBehavior.start,
-                  itemCount: revenuesList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return addNewRevenueWidget(revenuesList[index], index, () {
-                      Alert(
-                          context: context,
-                          title: "Revenue",
-                          content: Column(
-                            children: <Widget>[
-                              TextField(
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.description),
-                                  labelText: revenuesList[index].detail,
-                                ),
-                                onChanged: detailChanged,
+            ),
+            backgroundColor: colorPalette.darkGrey,
+            body: new ListView.builder(
+                dragStartBehavior: DragStartBehavior.start,
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (BuildContext context, int index) {
+                  List<TransactionApp> revenuesList =
+                      new List<TransactionApp>();
+
+                  print('building a new one!');
+                  print(snapshot.data.documents.length);
+                  revenuesList = buildRevList(snapshot);
+
+                  return addNewRevenueWidget(
+                      revenuesList, revenuesList[index], index, () {
+                    Alert(
+                        context: context,
+                        title: "Revenue",
+                        content: Column(
+                          children: <Widget>[
+                            TextField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.description),
+                                labelText: revenuesList[index].detail,
                               ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.attach_money),
-                                  labelText:
-                                      revenuesList[index].amount.toString(),
-                                ),
-                                onChanged: amountChanged,
-                              ),
-                            ],
-                          ),
-                          buttons: [
-                            DialogButton(
-                              onPressed: () =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
+                              onChanged: detailChanged,
                             ),
-                            DialogButton(
-                              onPressed: () {
-                                //TODO: Change Revenue
-                                setState(() {
-                                  _firebaseCrud.changeTransactionData(
-                                      revenuesList[index],
-                                      _detail,
-                                      _amount,
-                                      true);
-                                  buildRevList(snapshot);
-                                });
-
+                            TextField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.attach_money),
+                                labelText:
+                                    revenuesList[index].amount.toString(),
+                              ),
+                              onChanged: amountChanged,
+                            ),
+                          ],
+                        ),
+                        buttons: [
+                          DialogButton(
+                            onPressed: () =>
                                 Navigator.of(context, rootNavigator: true)
-                                    .pop();
+                                    .pop(),
+                            child: Text(
+                              "Cancel",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
+                          DialogButton(
+                            onPressed: () {
+                              setState(() {
+                                _firebaseCrud.changeTransactionData(
+                                    revenuesList[index],
+                                    _detail,
+                                    _amount,
+                                    true);
+                                buildRevList(snapshot);
+                              });
 
-                                /*Navigator.pushReplacement(
+                              Navigator.of(context, rootNavigator: true).pop();
+
+                              /*Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
@@ -193,55 +202,51 @@ class _ViewRevenuesForPartnerState extends State<ViewRevenuesForPartner> {
                                             partnerID, currUserID),
                                   ),
                                 );*/
-                              },
-                              child: Text(
-                                "Change",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                            )
-                          ]).show();
-                    }, () {
-                      Alert(
-                          context: context,
-                          title: "Warningo",
-                          desc: 'Do you want to delete?',
-                          buttons: [
-                            DialogButton(
-                              onPressed: () =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
+                            },
+                            child: Text(
+                              "Change",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
                             ),
-                            DialogButton(
-                              onPressed: () {
-                                setState(() {
-                                  _firebaseCrud
-                                      .deleteTransaction(
-                                          revenuesList[index], true)
-                                      .whenComplete(() {
-                                    buildRevList(snapshot);
+                          )
+                        ]).show();
+                  }, () {
+                    Alert(
+                        context: context,
+                        title: "Warningo",
+                        desc: 'Do you want to delete?',
+                        buttons: [
+                          DialogButton(
+                            onPressed: () =>
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(),
+                            child: Text(
+                              "Cancel",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
+                          DialogButton(
+                            onPressed: () async {
+                              await _firebaseCrud.deleteTransaction(
+                                  revenuesList[index], true);
 
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  });
-                                });
-                              },
-                              child: Text(
-                                "Delete",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                            )
-                          ]).show();
-                    });
-                  }),
-            );
-          }
+                              setState(() {
+                                revenuesList = buildRevList(snapshot);
+                              });
+
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            child: Text(
+                              "Delete",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          )
+                        ]).show();
+                  });
+                }),
+          );
         }
         return Scaffold(
           appBar: PreferredSize(

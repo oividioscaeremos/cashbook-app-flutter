@@ -36,11 +36,13 @@ class PDFGenerator {
         await firebaseCrud.getAllTransactionsForCompany(cID, currUser.uid);
 
     List<List<String>> revenues = new List<List<String>>();
-    revenues.add(<String>['Details', 'Date', 'Amount', 'Process State']);
+    revenues.add(<String>['Details', 'Date', 'Amount', 'State']);
     List<List<String>> payments = new List<List<String>>();
-    payments.add(<String>['Details', 'Date', 'Amount', 'Process State']);
+    payments.add(<String>['Details', 'Date', 'Amount', 'State']);
     double futureRevenues = 0.0;
     double futurePayments = 0.0;
+    double pastPayments = 0.0;
+    double pastRevenues = 0.0;
 
     allTransactions[0]
         .sort((a, b) => a.date.compareTo(b.date)); // sort date ascending
@@ -50,6 +52,8 @@ class PDFGenerator {
     allTransactions[0].forEach((e) {
       if (!e.processed) {
         futureRevenues += e.amount;
+      } else {
+        pastRevenues += e.amount;
       }
       revenues.add(<String>[
         e.detail,
@@ -62,6 +66,8 @@ class PDFGenerator {
     allTransactions[1].forEach((e) {
       if (!e.processed) {
         futurePayments += e.amount;
+      } else {
+        pastPayments += e.amount;
       }
       payments.add(<String>[
         e.detail,
@@ -180,16 +186,26 @@ class PDFGenerator {
             Table.fromTextArray(context: context, data: revenues),
             SizedBox(height: 10.0),
             Text(
+                'Total revenues from this company : ${pastRevenues.toString()} TL'),
+            SizedBox(height: 10.0),
+            Text(
                 'Total amount to claim from this company : ${futureRevenues.toString()} TL'),
             SizedBox(height: 50.0),
             Header(level: 2, text: 'Payments'),
             Table.fromTextArray(context: context, data: payments),
             SizedBox(height: 10.0),
             Text(
-                'Total amount to pay to this company : ${futurePayments.toString()} TL'),
+                'Total payments to this company : ${pastPayments.toString()} TL'),
             SizedBox(height: 10.0),
             Text(
-                'Total company balance : ${(futurePayments - futureRevenues).toString()} TL'),
+                'Total amount to pay to this company : ${futurePayments.toString()} TL'),
+            SizedBox(height: 50.0),
+            Text(
+              'Total company balance : ${(futurePayments - futureRevenues).toString()} TL',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ];
         },
       ),

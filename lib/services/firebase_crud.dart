@@ -580,9 +580,32 @@ class FirebaseCrud {
               companySS.data['currentRevenueBalance'] - docRef.data['amount']
         });
 
-        _firestore.collection('revenues').document(transaction.docID).delete();
+        return Firestore.instance
+            .collection('revenues')
+            .document(transaction.docID)
+            .delete();
       } else {
-        _firestore.collection('revenues').document(transaction.docID).delete();
+        // if the revenue was processed it means it has been added to our user's
+        // cash balance so we need to subtract it
+        DocumentSnapshot docRef = await _firestore
+            .collection('revenues')
+            .document(transaction.docID)
+            .get();
+        DocumentSnapshot userSS = await _firestore
+            .collection('users')
+            .document(docRef.data['to'])
+            .get();
+
+        _firestore.collection('users').document(docRef.data['to']).updateData({
+          'properties.currentCashBalance': userSS.data['properties']
+                  ['currentCashBalance'] -
+              docRef.data['amount']
+        });
+
+        return Firestore.instance
+            .collection('revenues')
+            .document(transaction.docID)
+            .delete();
       }
     } else {
       print('we are right here!');
@@ -590,7 +613,8 @@ class FirebaseCrud {
           .collection('payments')
           .document(transaction.docID)
           .get();
-      print('we are right here 02!');
+      print(
+          'we are right here 02! & ${docRef.data.toString()} && ${transaction.docID}');
 
       if (!docRef.data['isProcessed']) {
         print('Came to here 01');
@@ -623,10 +647,32 @@ class FirebaseCrud {
         });
         print('Came to here 04');
 
-        _firestore.collection('payments').document(transaction.docID).delete();
-        print('Came to here 05');
+        return await Firestore.instance
+            .collection('payments')
+            .document(transaction.docID)
+            .delete();
       } else {
-        _firestore.collection('payments').document(transaction.docID).delete();
+        // if the payment was processed it means that it has been subtracted from
+        // our user's cashBalance so we need to add it.
+        DocumentSnapshot docRef = await _firestore
+            .collection('payments')
+            .document(transaction.docID)
+            .get();
+        DocumentSnapshot userSS = await _firestore
+            .collection('users')
+            .document(docRef.data['from'])
+            .get();
+
+        _firestore.collection('users').document(docRef.data['to']).updateData({
+          'properties.currentCashBalance': userSS.data['properties']
+                  ['currentCashBalance'] +
+              docRef.data['amount']
+        });
+
+        return await Firestore.instance
+            .collection('payments')
+            .document(transaction.docID)
+            .delete();
       }
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cash_book_app/classes/Transaction.dart';
 import 'package:cash_book_app/components/singleTransactionView.dart';
 import 'package:cash_book_app/screens/adding_pages/add_revenue_page.dart';
@@ -9,7 +11,6 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 String userID;
 String partnerID;
-List<TransactionApp> paymentsList = new List<TransactionApp>();
 
 class ViewPaymentsForPartner extends StatefulWidget {
   ViewPaymentsForPartner(@required String partner_id, String currUserId) {
@@ -44,8 +45,12 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
                 )));
   }
 
-  Widget addNewPaymentWidget(TransactionApp company, int index,
-      Function dialogFun, Function deleteFun) {
+  Widget addNewPaymentWidget(
+      List<TransactionApp> paymentsList,
+      TransactionApp company,
+      int index,
+      Function dialogFun,
+      Function deleteFun) {
     return SingleTransaction(
       list: paymentsList,
       index: index,
@@ -63,14 +68,12 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
     _detail = input;
   }
 
-  void buildPaymentList(AsyncSnapshot<QuerySnapshot> snapshot) {
-    paymentsList = new List<TransactionApp>();
-
-    List snapShotDoc = snapshot.data.documents;
+  List<TransactionApp> buildPaymentList(AsyncSnapshot<QuerySnapshot> snapshot) {
+    List<TransactionApp> paymentsList = new List<TransactionApp>();
 
     snapshot.data.documents.forEach((f) {
       TransactionApp rev = new TransactionApp(
-          docID: f.data["tID"],
+          docID: f.documentID,
           from: f.data["from"],
           to: f.data["to"],
           date: DateTime.fromMillisecondsSinceEpoch(
@@ -84,15 +87,17 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
     });
 
     paymentsList.sort((a, b) => a.date.compareTo(b.date));
+
+    return paymentsList;
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _firebaseCrud.getTransactions(userID, partnerID, false),
-      builder: (context, snapshot) {
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
-          buildPaymentList(snapshot);
+          print('What does this say -> ${snapshot.data.documents.length}');
 
           return Scaffold(
             appBar: PreferredSize(
@@ -125,9 +130,19 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
             ),
             backgroundColor: colorPalette.darkGrey,
             body: new ListView.builder(
-                itemCount: paymentsList.length,
+                itemCount: snapshot.data.documents.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return addNewPaymentWidget(paymentsList[index], index, () {
+                  print('tID');
+                  print(snapshot.data.documents[index].documentID);
+                  List<TransactionApp> paymentsList =
+                      new List<TransactionApp>();
+
+                  print('building a new one!');
+                  print(snapshot.data.documents.length);
+                  paymentsList = buildPaymentList(snapshot);
+
+                  return addNewPaymentWidget(
+                      paymentsList, paymentsList[index], index, () {
                     Alert(
                         context: context,
                         title: "Payment",
@@ -169,8 +184,8 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
                                     _detail,
                                     _amount,
                                     false);
-                                buildPaymentList(snapshot);
                               });
+                              paymentsList = buildPaymentList(snapshot);
 
                               Navigator.of(context, rootNavigator: true).pop();
 
@@ -207,17 +222,17 @@ class _ViewPaymentsForPartnerState extends State<ViewPaymentsForPartner> {
                             ),
                           ),
                           DialogButton(
-                            onPressed: () {
-                              setState(() {
-                                _firebaseCrud
-                                    .deleteTransaction(
-                                        paymentsList[index], false)
-                                    .whenComplete(() {
+                            onPressed: () async {
+                              await _firebaseCrud
+                                  .deleteTransaction(paymentsList[index], false)
+                                  .then((val) {
+                                print('it is officially  here 0!');
+                                setState(() {
                                   buildPaymentList(snapshot);
-
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
                                 });
+
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
                               });
 
                               /*Navigator.pushReplacement(

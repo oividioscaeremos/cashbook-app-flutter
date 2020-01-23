@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 String userID;
-List<TransactionApp> paymentsList = new List<TransactionApp>();
 
 class ViewUpcomingPaymentsForPartner extends StatefulWidget {
   ViewUpcomingPaymentsForPartner(String currUserId) {
@@ -33,8 +32,12 @@ class _ViewUpcomingPaymentsForPartnerState
     super.initState();
   }
 
-  Widget addNewPaymentWidget(TransactionApp company, int index,
-      Function dialogFun, Function deleteFun) {
+  Widget addNewPaymentWidget(
+      List<TransactionApp> paymentsList,
+      TransactionApp company,
+      int index,
+      Function dialogFun,
+      Function deleteFun) {
     return SingleTransaction(
       list: paymentsList,
       index: index,
@@ -52,15 +55,15 @@ class _ViewUpcomingPaymentsForPartnerState
     _detail = input;
   }
 
-  void buildPaymentList(AsyncSnapshot<QuerySnapshot> snapshot) {
-    paymentsList = new List<TransactionApp>();
+  List<TransactionApp> buildPaymentList(AsyncSnapshot<QuerySnapshot> snapshot) {
+    List<TransactionApp> paymentsList = new List<TransactionApp>();
 
     List snapShotDoc = snapshot.data.documents;
 
     snapshot.data.documents.forEach((f) {
       if (!f.data["isProcessed"]) {
         TransactionApp rev = new TransactionApp(
-            docID: f.data["tID"],
+            docID: f.documentID,
             from: f.data["from"],
             to: f.data["to"],
             date: DateTime.fromMillisecondsSinceEpoch(
@@ -75,6 +78,8 @@ class _ViewUpcomingPaymentsForPartnerState
     });
 
     paymentsList.sort((a, b) => a.date.compareTo(b.date));
+
+    return paymentsList;
   }
 
   @override
@@ -83,83 +88,85 @@ class _ViewUpcomingPaymentsForPartnerState
       stream: _firebaseCrud.getPaymentsForUser(userID),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          buildPaymentList(snapshot);
-
-          for (var d in paymentsList) {
-            return Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size(MediaQuery.of(context).size.width, 60),
-                child: AppBar(
-                  leading: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: colorPalette.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size(MediaQuery.of(context).size.width, 60),
+              child: AppBar(
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: colorPalette.white,
                   ),
-                  backgroundColor: colorPalette.darkBlue,
-                  automaticallyImplyLeading: false,
-                  centerTitle: true,
-                  title: Text(
-                    "Upcoming Payments",
-                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                backgroundColor: colorPalette.darkBlue,
+                automaticallyImplyLeading: false,
+                centerTitle: true,
+                title: Text(
+                  "Upcoming Payments",
                 ),
               ),
-              backgroundColor: colorPalette.darkGrey,
-              body: new ListView.builder(
-                  itemCount: paymentsList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return addNewPaymentWidget(paymentsList[index], index, () {
-                      Alert(
-                          context: context,
-                          title: "Payment",
-                          content: Column(
-                            children: <Widget>[
-                              TextField(
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.description),
-                                  labelText: paymentsList[index].detail,
-                                ),
-                                onChanged: detailChanged,
+            ),
+            backgroundColor: colorPalette.darkGrey,
+            body: new ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (BuildContext context, int index) {
+                  List<TransactionApp> paymentsList =
+                      new List<TransactionApp>();
+
+                  paymentsList = buildPaymentList(snapshot);
+
+                  return addNewPaymentWidget(
+                      paymentsList, paymentsList[index], index, () {
+                    Alert(
+                        context: context,
+                        title: "Payment",
+                        content: Column(
+                          children: <Widget>[
+                            TextField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.description),
+                                labelText: paymentsList[index].detail,
                               ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.attach_money),
-                                  labelText:
-                                      paymentsList[index].amount.toString(),
-                                ),
-                                onChanged: amountChanged,
-                              ),
-                            ],
-                          ),
-                          buttons: [
-                            DialogButton(
-                              onPressed: () =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
+                              onChanged: detailChanged,
                             ),
-                            DialogButton(
-                              onPressed: () {
-                                setState(() {
-                                  _firebaseCrud.changeTransactionData(
-                                      paymentsList[index],
-                                      _detail,
-                                      _amount,
-                                      false);
-                                  buildPaymentList(snapshot);
-                                });
-
+                            TextField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.attach_money),
+                                labelText:
+                                    paymentsList[index].amount.toString(),
+                              ),
+                              onChanged: amountChanged,
+                            ),
+                          ],
+                        ),
+                        buttons: [
+                          DialogButton(
+                            onPressed: () =>
                                 Navigator.of(context, rootNavigator: true)
-                                    .pop();
+                                    .pop(),
+                            child: Text(
+                              "Cancel",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
+                          DialogButton(
+                            onPressed: () {
+                              setState(() {
+                                _firebaseCrud.changeTransactionData(
+                                    paymentsList[index],
+                                    _detail,
+                                    _amount,
+                                    false);
+                                buildPaymentList(snapshot);
+                              });
 
-                                /*Navigator.pushReplacement(
+                              Navigator.of(context, rootNavigator: true).pop();
+
+                              /*Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
@@ -167,55 +174,51 @@ class _ViewUpcomingPaymentsForPartnerState
                                             partnerID, currUserID),
                                   ),
                                 );*/
-                              },
-                              child: Text(
-                                "Change",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                            )
-                          ]).show();
-                    }, () {
-                      Alert(
-                          context: context,
-                          title: "Warningo",
-                          desc: 'Do you want to delete?',
-                          buttons: [
-                            DialogButton(
-                              onPressed: () =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
+                            },
+                            child: Text(
+                              "Change",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
                             ),
-                            DialogButton(
-                              onPressed: () {
-                                setState(() {
-                                  _firebaseCrud
-                                      .deleteTransaction(
-                                          paymentsList[index], false)
-                                      .whenComplete(() {
-                                    buildPaymentList(snapshot);
+                          )
+                        ]).show();
+                  }, () {
+                    Alert(
+                        context: context,
+                        title: "Warningo",
+                        desc: 'Do you want to delete?',
+                        buttons: [
+                          DialogButton(
+                            onPressed: () =>
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(),
+                            child: Text(
+                              "Cancel",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
+                          DialogButton(
+                            onPressed: () async {
+                              await _firebaseCrud.deleteTransaction(
+                                  paymentsList[index], false);
 
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  });
-                                });
-                              },
-                              child: Text(
-                                "Delete",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                            )
-                          ]).show();
-                    });
-                  }),
-            );
-          }
+                              setState(() {
+                                paymentsList = buildPaymentList(snapshot);
+                              });
+
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            child: Text(
+                              "Delete",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          )
+                        ]).show();
+                  });
+                }),
+          );
         }
         return Scaffold(
           appBar: PreferredSize(
