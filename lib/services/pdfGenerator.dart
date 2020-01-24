@@ -36,9 +36,9 @@ class PDFGenerator {
         await firebaseCrud.getAllTransactionsForCompany(cID, currUser.uid);
 
     List<List<String>> revenues = new List<List<String>>();
-    revenues.add(<String>['Details', 'Date', 'Amount', 'State']);
+    revenues.add(<String>['Açıklama', 'Tarih', 'Tutar', 'Durum']);
     List<List<String>> payments = new List<List<String>>();
-    payments.add(<String>['Details', 'Date', 'Amount', 'State']);
+    payments.add(<String>['Açıklama', 'Tarih', 'Tutar', 'Durum']);
     double futureRevenues = 0.0;
     double futurePayments = 0.0;
     double pastPayments = 0.0;
@@ -59,7 +59,7 @@ class PDFGenerator {
         e.detail,
         formatter.format(e.date),
         e.amount.toString(),
-        e.processed ? 'Processed' : 'Not Processed'
+        e.processed ? 'İşlendi' : 'İşlenmedi'
       ]);
     });
 
@@ -73,7 +73,7 @@ class PDFGenerator {
         e.detail,
         formatter.format(e.date),
         e.amount.toString(),
-        e.processed ? 'Processed' : 'Not Processed'
+        e.processed ? 'İşlendi' : 'İşlenmedi'
       ]);
     });
 
@@ -106,7 +106,7 @@ class PDFGenerator {
                 border:
                     BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
             child: Text(
-              'Portable Document Format',
+              'PDF',
               style: Theme.of(context)
                   .defaultTextStyle
                   .copyWith(color: PdfColors.grey),
@@ -118,7 +118,7 @@ class PDFGenerator {
             alignment: Alignment.centerRight,
             margin: const EdgeInsets.only(top: 1.0 * PdfPageFormat.cm),
             child: Text(
-              'Page ${context.pageNumber} of ${context.pagesCount}',
+              'Sayfa ${context.pageNumber} / ${context.pagesCount}',
               style: Theme.of(context)
                   .defaultTextStyle
                   .copyWith(color: PdfColors.grey),
@@ -132,7 +132,7 @@ class PDFGenerator {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('Partner Report', textScaleFactor: 2),
+                  Text('Partner Raporu', textScaleFactor: 2),
                   PdfLogo()
                 ],
               ),
@@ -145,11 +145,11 @@ class PDFGenerator {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Company Name: ${comp.companyName.toString()}',
+                      'Şirket Adı: ${comp.companyName.toString()}',
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      'Address: ${comp.address.toString()}',
+                      'Adres: ${comp.address.toString()}',
                     ),
                   ],
                 ),
@@ -157,19 +157,19 @@ class PDFGenerator {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Person One: ${comp.personOne.nameAndSurname.toString()}',
+                      'Kişi 1: ${comp.personOne.nameAndSurname.toString()}',
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      'Phone Number: ${comp.personOne.phoneNumber.toString()}',
+                      'Telefon Numarası: ${comp.personOne.phoneNumber.toString()}',
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      'Person Two: ${comp.personTwo.nameAndSurname.toString()}',
+                      'Kişi 2: ${comp.personTwo.nameAndSurname.toString()}',
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      'Phone Number: ${comp.personTwo.phoneNumber.toString()}',
+                      'Telefon Numarası: ${comp.personTwo.phoneNumber.toString()}',
                     ),
                   ],
                 ),
@@ -182,26 +182,26 @@ class PDFGenerator {
                 children: <Widget>[],
               ),
             ),
-            Header(level: 2, text: 'Revenues'),
+            Header(level: 2, text: 'Gelirler'),
             Table.fromTextArray(context: context, data: revenues),
             SizedBox(height: 10.0),
             Text(
-                'Total revenues from this company : ${pastRevenues.toString()} TL'),
+                'Partnerden alınmış toplam tutar : ${pastRevenues.toString()} TL'),
             SizedBox(height: 10.0),
             Text(
-                'Total amount to claim from this company : ${futureRevenues.toString()} TL'),
+                'Partnerden alınması gereken tutar : ${futureRevenues.toString()} TL'),
             SizedBox(height: 50.0),
-            Header(level: 2, text: 'Payments'),
+            Header(level: 2, text: 'Giderler'),
             Table.fromTextArray(context: context, data: payments),
             SizedBox(height: 10.0),
             Text(
-                'Total payments to this company : ${pastPayments.toString()} TL'),
+                'Partnere ödenmiş toplam tutar : ${pastPayments.toString()} TL'),
             SizedBox(height: 10.0),
             Text(
-                'Total amount to pay to this company : ${futurePayments.toString()} TL'),
+                'Partnere ödenmesi gereken tutar : ${futurePayments.toString()} TL'),
             SizedBox(height: 50.0),
             Text(
-              'Total company balance : ${(futurePayments - futureRevenues).toString()} TL',
+              'Toplam partner bakiyesi : ${(futurePayments - futureRevenues).toString()} TL',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -263,9 +263,9 @@ class PDFGenerator {
     var formatter = new DateFormat("dd.MM.yyyy");
 
     List<List<String>> revenues = new List<List<String>>();
-    revenues.add(<String>['Company', 'Details', 'Date', 'Amount', 'State']);
+    revenues.add(<String>['Şirket', 'Açıklama', 'Tarih', 'Tutar', 'Durum']);
     List<List<String>> payments = new List<List<String>>();
-    payments.add(<String>['Company', 'Details', 'Date', 'Amount', 'State']);
+    payments.add(<String>['Şirket', 'Açıklama', 'Tarih', 'Tutar', 'Durum']);
     double futureRevenues = 0.0;
     double futurePayments = 0.0;
 
@@ -280,7 +280,7 @@ class PDFGenerator {
             e.detail,
             formatter.format(e.date),
             e.amount.toString(),
-            e.processed ? 'Processed' : 'Not Processed'
+            e.processed ? 'İşlendi' : 'İşlenmedi'
           ]);
           print('revenues[revenues.length -1].toString()');
           print(revenues[revenues.length - 1].toString());
@@ -295,7 +295,7 @@ class PDFGenerator {
             e.detail,
             formatter.format(e.date),
             e.amount.toString(),
-            e.processed ? 'Processed' : 'Not Processed'
+            e.processed ? 'İşlendi' : 'İşlenmedi'
           ]);
         });
 
@@ -317,7 +317,7 @@ class PDFGenerator {
                     border: BoxBorder(
                         bottom: true, width: 0.5, color: PdfColors.grey)),
                 child: Text(
-                  'CashBook Application',
+                  'CashBook App',
                   style: Theme.of(context)
                       .defaultTextStyle
                       .copyWith(color: PdfColors.grey),
@@ -329,7 +329,7 @@ class PDFGenerator {
                 alignment: Alignment.centerRight,
                 margin: const EdgeInsets.only(top: 1.0 * PdfPageFormat.cm),
                 child: Text(
-                  'Page ${context.pageNumber} of ${context.pagesCount}',
+                  'Sayfa ${context.pageNumber} / ${context.pagesCount}',
                   style: Theme.of(context)
                       .defaultTextStyle
                       .copyWith(color: PdfColors.grey),
@@ -343,7 +343,7 @@ class PDFGenerator {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text('Company Report', textScaleFactor: 2),
+                      Text('Şirket Raporu', textScaleFactor: 2),
                       PdfLogo()
                     ],
                   ),
@@ -356,11 +356,11 @@ class PDFGenerator {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Company Name: ${currUser.companyName.toString()}',
+                          'Şirket Adı: ${currUser.companyName.toString()}',
                         ),
                         SizedBox(height: 10.0),
                         Text(
-                          'Name and Surname: ${currUser.nameAndSurname}',
+                          'İsim Soyisim: ${currUser.nameAndSurname}',
                         ),
                         SizedBox(height: 10.0),
                         Text(
@@ -368,15 +368,15 @@ class PDFGenerator {
                         ),
                         SizedBox(height: 10.0),
                         Text(
-                          'Current Cash Balance: ${currUser.currentCashBalance}',
+                          'Anlık Nakit Bakiye: ${currUser.currentCashBalance}',
                         ),
                         SizedBox(height: 10.0),
                         Text(
-                          'Current Total Balance: ${currUser.currentTotalBalance}',
+                          'Toplam Bakiye: ${currUser.currentTotalBalance}',
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          '* total balance shows the balance when all the future revenues and payments are processed.',
+                          '* toplam bakiye gelecekteki tüm gelir ve giderlerin eklendiği varsayımıyla hesaplanmaktadırç.',
                           style: TextStyle(
                             fontSize: 8.0,
                           ),
@@ -395,15 +395,15 @@ class PDFGenerator {
                 Header(level: 2, text: 'Revenues'),
                 Table.fromTextArray(context: context, data: revenues),
                 SizedBox(height: 10.0),
-                Text('Total amount to claim : ${futureRevenues.toString()} TL'),
+                Text('Toplam alacak : ${futureRevenues.toString()} TL'),
                 SizedBox(height: 50.0),
                 Header(level: 2, text: 'Payments'),
                 Table.fromTextArray(context: context, data: payments),
                 SizedBox(height: 10.0),
-                Text('Total amount to pay : ${futurePayments.toString()} TL'),
+                Text('Toplam ödenecek : ${futurePayments.toString()} TL'),
                 SizedBox(height: 10.0),
                 Text(
-                    'Total company expectation : ${(futureRevenues - futurePayments).toString()} TL'),
+                    'Toplam beklenen : ${(futureRevenues - futurePayments).toString()} TL'),
               ];
             },
           ),
